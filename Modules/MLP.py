@@ -25,14 +25,11 @@ class MLP:
         return
 
     # eval process
-    def eval(self, x, y_):
+    def eval(self, x):
         # forward
         flat = np.reshape(x, [-1, 28 * 28])
         f1 = self.linear1.forward(flat)
         f2 = self.relu.forward(f1)
         f3 = self.linear2.forward(f2)
         f4 = self.softmax.forward(f3)
-        # Evaluation
-        correct_prediction = np.equal(np.argmax(y_, 1), np.argmax(f4, 1))
-        accuracy = np.mean(np.array(correct_prediction, dtype=np.float32))
-        return accuracy
+        return f4

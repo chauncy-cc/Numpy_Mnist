@@ -5,9 +5,8 @@ import Modules
 import warnings
 import numpy as np
 import matplotlib.pyplot as plt
-from torchvision import datasets
 from torch.utils.data import DataLoader
-
+from torchvision import datasets, transforms
 
 warnings.filterwarnings('ignore')
 
@@ -24,10 +23,12 @@ LOG_ITERATIONS = 1000
 
 train_set = datasets.MNIST('./data',
                            train=True,
+                           transform=transforms.ToTensor(),
                            download=True)
 
 test_set = datasets.MNIST('./data',
                           train=True,
+                          transform=transforms.ToTensor(),
                           download=True)
 
 # Data Loader
@@ -100,6 +101,7 @@ def train(epoch):
     sum_loss = 0.0  # 用来每LOG_ITERATIONS打印一次平均loss
     for batch_idx, (inputs, labels) in enumerate(train_loader):
         # forward + backward + step
+        inputs, labels = inputs.numpy(), labels.numpy()
         loss = model.train(inputs, labels, LEARNING_RATE)
         sum_loss += loss
         if batch_idx % LOG_ITERATIONS == 0:
@@ -112,9 +114,9 @@ def test():
     correct = 0
     total = 0
     for (inputs, labels) in test_loader:
-        outputs = model(inputs)
+        outputs = model.eval(inputs)
         # 取得分最高的那个类
-        _, predicted = np.max(outputs.data, 1)
+        _, predicted = np.max(outputs, 1)
         total += labels.size(0)
         correct += (predicted == labels).sum()
     print('第%d个epoch的识别准确率为：%d%%' % (epoch + 1, (100 * correct / total)))
