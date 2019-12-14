@@ -15,11 +15,11 @@ device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 # opt = parser.parse_args()
 
 # Hyper parameters
-TRAIN_EPOCHS = 10
+TRAIN_EPOCHS = 25
 BATCH_SIZE = 64
 LEARNING_RATE = 0.001
 MOMENTUM = 0.9
-LOG_ITERATIONS = 1000
+LOG_ITERATIONS = 100
 
 train_set = datasets.MNIST('./data',
                            train=True,
@@ -102,15 +102,13 @@ def train(epoch):
         optimizer.step()
 
         sum_loss += loss.item()
-
-
-        if (batch_idx + 1) % LOG_ITERATIONS == 0:
-            print('[%d, %d] loss: %.03f'
-                  % (epoch + 1, batch_idx + 1, sum_loss / 100))
+        if batch_idx != 0 and batch_idx % LOG_ITERATIONS == 0:
+            print('epoch: %d, batch_idx: %d average_batch_loss: %f'
+                  % (epoch + 1, batch_idx, sum_loss / LOG_ITERATIONS))
             sum_loss = 0.0
 
 
-def test():
+def test(epoch):
     with torch.no_grad():
         correct = 0
         total = 0
@@ -121,13 +119,17 @@ def test():
             _, predicted = torch.max(outputs.data, 1)
             total += labels.size(0)
             correct += (predicted == labels).sum()
-        print('第%d个epoch的识别准确率为：%d%%' % (epoch + 1, (100 * correct / total)))
+        if epoch == 0:
+            print('模型初始化后训练前的测试集识别准确率为：%f%%' % (100 * correct / total))
+        else:
+            print('第%d个epoch的识别准确率为：%d%%' % (epoch + 1, (100 * correct / total)))
 
-
+test(0)
 for epoch in range(TRAIN_EPOCHS):
     train(epoch)
-    test()
+    test(epoch)
     # torch.save(model.state_dict(), '%s/net_%03d.pth' % (opt.outf, epoch + 1))
 
 
 # 来自：https://blog.csdn.net/sunqiande88/article/details/80089941
+# TODO： pytorch版本如何在线监控loss的变化，以及对loss曲线画图等等，需要研究一番。

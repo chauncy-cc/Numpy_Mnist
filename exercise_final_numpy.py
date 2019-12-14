@@ -20,7 +20,7 @@ warnings.filterwarnings('ignore')
 # Global variables
 N_CLASS = 10
 BATCH_SIZE = 64
-TRAIN_EPOCHS = 10
+TRAIN_EPOCHS = 25
 LEARNING_RATE = 0.001
 LOG_ITERATIONS = 100
 
@@ -46,7 +46,7 @@ test_loader = DataLoader(dataset=test_set,
 
 model = Modules.MLP()
 
-# 画出实验的学习曲线
+# 画出实验的学习曲线【把这两个函数的api看看他们各自的功能，记住要对结果进行画图。测试集准确率，训练集准确率画一张图，loss的训练过程画一张图】
 def plot_learning_curves(experiment_data):
     # 生成图像.
     fig, axes = plt.subplots(3, 4, figsize=(22, 12))
@@ -54,7 +54,7 @@ def plot_learning_curves(experiment_data):
         "Learning Curves for all Tasks and Hyper-parameter settings",
         fontsize="x-large"
     )
-    # 画出所有的学习曲线.
+    # 画出所有的学习曲线. i表示不同模型，j表示不同setting
     for i, results in enumerate(experiment_data):
         for j, (setting, train_accuracy, test_accuracy) in enumerate(results):
             # Plot.
@@ -62,7 +62,7 @@ def plot_learning_curves(experiment_data):
             axes[j, i].plot(xs, train_accuracy, label='train_accuracy')
             axes[j, i].plot(xs, test_accuracy, label='test_accuracy')
             # Prettify individual plots
-            axes[j, i].ticklabel_format(style='sci', axis='x', scilimits=(0,0))
+            axes[j, i].ticklabel_format(style='sci', axis='x', scilimits=(0, 0))
             axes[j, i].set_xlabel('Number of samples processed')
             axes[j, i].set_ylabel('Epochs: {}, Learning rate: {}. Accuracy'.format(*setting))
             axes[j, i].set_title('Task {}'.format(i+1))
@@ -110,7 +110,7 @@ def train(epoch):
         loss = model.train(inputs, labels, LEARNING_RATE)
         sum_loss += loss
         if batch_idx != 0 and batch_idx % LOG_ITERATIONS == 0:
-            print('epoch: %d, batch_idx: %d average_batch_loss: %.03f'
+            print('epoch: %d, batch_idx: %d average_batch_loss: %f'
                   % (epoch + 1, batch_idx, sum_loss / LOG_ITERATIONS))
             sum_loss =0.0
 
@@ -125,11 +125,16 @@ def test(epoch):
         predicted = np.argmax(outputs, 1)
         total += labels.shape[0]
         correct += (predicted == labels).sum()
-    print('第%d个epoch的识别准确率为：%f%%' % (epoch + 1, (100 * correct / total)))
+    if epoch == 0:
+        print('模型初始化后训练前的测试集识别准确率为：%f%%' % (100 * correct / total))
+    else:
+        print('第%d个epoch的测试集识别准确率为：%f%%' % (epoch + 1, (100 * correct / total)))
 
 def one_hot(labels, n_class):
     return np.array([[1 if i == l else 0 for i in range(n_class)] for l in labels])
 
+# 训练前先测试一下模型
+test(0)
 for epoch in range(TRAIN_EPOCHS):
     train(epoch)
     test(epoch)
