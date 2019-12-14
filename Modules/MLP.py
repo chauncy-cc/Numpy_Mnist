@@ -17,12 +17,14 @@ class MLP:
         f1 = self.linear1.forward(flat)
         f2 = self.relu.forward(f1)
         f3 = self.linear2.forward(f2)
+        f4 = self.softmax.forward(f3)
+        loss = self.ce.forward(f4, y_)
         # backward
-        b1 = self.ce.backward(f3, y_)
+        b1 = self.ce.backward(f4, y_)
         b2 = self.linear2.backward(b1, f2, learning_rate)
         b3 = self.relu.backward(b2, f1)
         b5 = self.linear1.backward(b3, flat, learning_rate)
-        return
+        return loss
 
     # eval process
     def eval(self, x):

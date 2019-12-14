@@ -5,8 +5,10 @@ import Modules
 import warnings
 import numpy as np
 import matplotlib.pyplot as plt
+import torch.nn.functional as F
 from torch.utils.data import DataLoader
 from torchvision import datasets, transforms
+
 
 warnings.filterwarnings('ignore')
 
@@ -16,10 +18,12 @@ warnings.filterwarnings('ignore')
 # 卷积核是4维，还是要写4维，因为输入通道就1，但是输出通道可以尝试一下调参数
 
 # Global variables
-TRAIN_EPOCHS = 10
+N_CLASS = 10
 BATCH_SIZE = 64
+TRAIN_EPOCHS = 10
 LEARNING_RATE = 0.001
-LOG_ITERATIONS = 1000
+LOG_ITERATIONS = 100
+
 
 train_set = datasets.MNIST('./data',
                            train=True,
@@ -102,28 +106,33 @@ def train(epoch):
     for batch_idx, (inputs, labels) in enumerate(train_loader):
         # forward + backward + step
         inputs, labels = inputs.numpy(), labels.numpy()
+        labels = one_hot(labels, N_CLASS)   # one-hot
         loss = model.train(inputs, labels, LEARNING_RATE)
         sum_loss += loss
-        if batch_idx % LOG_ITERATIONS == 0:
-            print('[%d, %d] loss: %.03f'
-                  % (epoch + 1, batch_idx, sum_loss / 100))
+        if batch_idx != 0 and batch_idx % LOG_ITERATIONS == 0:
+            print('epoch: %d, batch_idx: %d average_batch_loss: %.03f'
+                  % (epoch + 1, batch_idx, sum_loss / LOG_ITERATIONS))
             sum_loss =0.0
 
 
-def test():
+def test(epoch):
     correct = 0
     total = 0
     for (inputs, labels) in test_loader:
+        inputs, labels = inputs.numpy(), labels.numpy()
         outputs = model.eval(inputs)
         # 取得分最高的那个类
-        _, predicted = np.max(outputs, 1)
-        total += labels.size(0)
+        predicted = np.argmax(outputs, 1)
+        total += labels.shape[0]
         correct += (predicted == labels).sum()
-    print('第%d个epoch的识别准确率为：%d%%' % (epoch + 1, (100 * correct / total)))
+    print('第%d个epoch的识别准确率为：%f%%' % (epoch + 1, (100 * correct / total)))
+
+def one_hot(labels, n_class):
+    return np.array([[1 if i == l else 0 for i in range(n_class)] for l in labels])
 
 for epoch in range(TRAIN_EPOCHS):
     train(epoch)
-    test()
+    test(epoch)
     # torch.save(model.state_dict(), '%s/net_%03d.pth' % (opt.outf, epoch + 1))
 
 
