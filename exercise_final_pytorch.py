@@ -1,13 +1,14 @@
 import torch
 import torch.nn as nn
-import torch.nn.functional as F
 import torch.optim as optim
+from tensorboardX import SummaryWriter
 from torch.utils.data import DataLoader
 from torchvision import datasets, transforms
-from torch.autograd import Variable
+
 
 # 定义是否使用GPU
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+writer = SummaryWriter('./Result')
 
 # parser = argparse.ArgumentParser()
 # parser.add_argument('--outf', default='./model/', help='folder to output images and model checkpoints') #模型保存路径

@@ -3,7 +3,7 @@ import numpy as np
 # 定义交叉熵模型
 class CrossEntropyLoss:
     def __init__(self):
-        print('CrossEntropyLoss constructed')
+        pass
 
     def forward(self, x, y_):
         batch_loss = 0.0

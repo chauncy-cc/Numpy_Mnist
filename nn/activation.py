@@ -34,7 +34,7 @@ class Sigmoid:
 # 定义SoftMax激活函数
 class Softmax:
     def __init__(self):
-        print('Softmax constructed')
+        pass
 
     def forward(self, x):
         y = np.exp(x - np.max(x, axis=1, keepdims=True))  # 利用最大值进行数据缩放，避免溢出，softmax必备

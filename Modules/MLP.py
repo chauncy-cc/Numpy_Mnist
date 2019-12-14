@@ -9,6 +9,7 @@ class MLP:
         self.linear2 = nn.Linear(128, 10)
         self.ce = nn.CrossEntropyLoss()
         self.softmax = nn.Softmax()
+        print('MLP constructed!')
 
     # Train process TO DO: train的时候将loss返回出来
     def train(self, x, y_, learning_rate):
@@ -18,13 +19,14 @@ class MLP:
         f2 = self.relu.forward(f1)
         f3 = self.linear2.forward(f2)
         f4 = self.softmax.forward(f3)
+        predicted = np.argmax(f4, 1)      # 算出模型输出
         loss = self.ce.forward(f4, y_)
         # backward
         b1 = self.ce.backward(f4, y_)
         b2 = self.linear2.backward(b1, f2, learning_rate)
         b3 = self.relu.backward(b2, f1)
         b5 = self.linear1.backward(b3, flat, learning_rate)
-        return loss
+        return loss, predicted
 
     # eval process
     def eval(self, x):
