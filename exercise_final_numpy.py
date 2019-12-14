@@ -12,9 +12,6 @@ from torchvision import datasets, transforms
 
 warnings.filterwarnings('ignore')
 
-### 建议把更多的激活函数模块也写上去。然后多做测试。卷积尝试加速
-### 跟pytorch版本进行比对
-# 今天至少把线性的全部写出来，最后优化卷积的实现
 # 卷积核是4维，还是要写4维，因为输入通道就1，但是输出通道可以尝试一下调参数
 
 # Global variables
@@ -43,19 +40,44 @@ test_loader = DataLoader(dataset=test_set,
                          shuffle=False)
 
 
-def plot_learning_curves(experiment_data):
+def plot_loss_curves(experiment_data):
     # 生成图像.
     fig, axes = plt.subplots(3, 2, figsize=(22, 12))
     st = fig.suptitle(
-        "Learning Curves for all Tasks and Hyper-parameter settings",
+        "Loss Curves for all Tasks and Hyper-parameter settings",
         fontsize="x-large"
     )
     # 画出所有的学习曲线. i表示不同模型，j表示不同setting
     for i, results in enumerate(experiment_data):
-        for j, (setting, train_accuracy, test_accuracy, train_loss) in enumerate(results):
+        for j, (setting, _, _, train_loss) in enumerate(results):
             # Plot.
-            # xs = [x * LOG_ITERATIONS for x in range(1, len(train_accuracy)+1)]    loss才是这么计算的
-            xs = [x * LOG_ITERATIONS for x in range(1, len(train_accuracy) + 1)]
+            xs = [x * LOG_ITERATIONS for x in range(1, len(train_loss) + 1)]
+            axes[j, i].plot(xs, train_loss, label='train_loss')
+            # Prettify individual plots
+            axes[j, i].ticklabel_format(style='sci', axis='x', scilimits=(0, 0))
+            axes[j, i].set_xlabel('Number of Train Iterations')
+            axes[j, i].set_ylabel('Epochs: {}, Learning rate: {}. Loss'.format(*setting))
+            axes[j, i].set_title('Task {}'.format(i + 1))
+            axes[j, i].legend()
+        # Prettify overall figure.
+        plt.tight_layout()
+        st.set_y(0.95)
+        fig.subplots_adjust(top=0.91)
+        plt.show()
+
+
+def plot_accuracy_curves(experiment_data):
+    # 生成图像.
+    fig, axes = plt.subplots(3, 2, figsize=(22, 12))
+    st = fig.suptitle(
+        "Accuracy Curves for all Tasks and Hyper-parameter settings",
+        fontsize="x-large"
+    )
+    # 画出所有的学习曲线. i表示不同模型，j表示不同setting
+    for i, results in enumerate(experiment_data):
+        for j, (setting, train_accuracy, test_accuracy, _) in enumerate(results):
+            # Plot.
+            xs = [x for x in range(1, len(train_accuracy) + 1)]
             axes[j, i].plot(xs, train_accuracy, label='train_accuracy')
             axes[j, i].plot(xs, test_accuracy, label='test_accuracy')
             # Prettify individual plots
@@ -97,14 +119,14 @@ def plot_summary_table(experiment_data):
     ax.yaxis.set_visible(False)
     plt.show()
 
-
+# 把labels变成one-hot形式
 def one_hot(labels, n_class):
     return np.array([[1 if i == l else 0 for i in range(n_class)] for l in labels])
 
 # 训练前先测试一下模型
 model = Modules.MLP()
 experiments_task_mlp = []
-settings = [(5, 0.0001), (5, 0.005), (5, 0.1)]
+settings = [(5, 0.0001), (5, 0.005), (5, 0.1)]         # train_epoch && learning_rate
 print('Trainging Model_MLP')
 for (num_epochs, learning_rate) in settings:
     # Train
@@ -142,7 +164,7 @@ for (num_epochs, learning_rate) in settings:
         # torch.save(model.state_dict(), '%s/net_%03d.pth' % (opt.outf, epoch + 1))
     experiments_task_mlp.append(((num_epochs, learning_rate), train_accuracy, test_accuracy, train_loss))
 
-plot_learning_curves([experiments_task_mlp])
+plot_accuracy_curves([experiments_task_mlp])
 plot_summary_table([experiments_task_mlp])
-
+plot_loss_curves([experiments_task_mlp])
 
