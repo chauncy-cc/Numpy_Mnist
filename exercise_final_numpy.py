@@ -127,7 +127,7 @@ def one_hot(labels, n_class):
 experiments_task_mlp = []
 model = Modules.MLP()
 settings = [(5, 0.0001), (5, 0.005), (5, 0.1)]         # train_epoch && learning_rate
-print('Trainging Model_MLP')
+print('Trainging Model_MLP...')
 for (num_epochs, learning_rate) in settings:
     # Train
     train_accuracy, test_accuracy, train_loss = [], [], []
@@ -159,7 +159,7 @@ for (num_epochs, learning_rate) in settings:
             predicted = np.argmax(outputs, 1)
             total += labels.shape[0]
             correct += (predicted == labels).sum()
-        print('第%d个epoch的测试集识别准确率为：%f%%' % (epoch + 1, (100 * correct / total)))
+        print('%dth epoch\'s classification accuracy is: %f%%' % (epoch + 1, (100 * correct / total)))
         test_accuracy.append(100 * correct / total)
         # torch.save(model.state_dict(), '%s/net_%03d.pth' % (opt.outf, epoch + 1))
     experiments_task_mlp.append(((num_epochs, learning_rate), train_accuracy, test_accuracy, train_loss))
@@ -168,7 +168,7 @@ for (num_epochs, learning_rate) in settings:
 experiments_task_lenet = []
 model = Modules.LeNet()
 settings = [(5, 0.0001), (5, 0.005), (5, 0.1)]         # train_epoch && learning_rate
-print('Trainging Model_LeNet')
+print('Trainging Model_LeNet..')
 for (num_epochs, learning_rate) in settings:
     # Train
     train_accuracy, test_accuracy, train_loss = [], [], []
@@ -200,7 +200,7 @@ for (num_epochs, learning_rate) in settings:
             predicted = np.argmax(outputs, 1)
             total += labels.shape[0]
             correct += (predicted == labels).sum()
-        print('第%d个epoch的测试集识别准确率为：%f%%' % (epoch + 1, (100 * correct / total)))
+        print('%dth epoch\'s classification accuracy is: %f%%' % (epoch + 1, (100 * correct / total)))
         test_accuracy.append(100 * correct / total)
         # torch.save(model.state_dict(), '%s/net_%03d.pth' % (opt.outf, epoch + 1))
     experiments_task_lenet.append(((num_epochs, learning_rate), train_accuracy, test_accuracy, train_loss))
