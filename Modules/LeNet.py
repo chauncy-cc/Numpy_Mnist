@@ -52,7 +52,7 @@ class LeNet:
 
         return loss, predicted
 
-    def eval(self, x, y_):
+    def eval(self, x):
         # forward
         f1 = self.conv1.forward(x)
         f2 = self.relu1.forward(f1)
@@ -64,8 +64,5 @@ class LeNet:
         f7 = self.linear1.forward(flat)
         f8 = self.relu3.forward(f7)
         f9 = self.linear2.forward(f8)
-        y = self.softmax.forward(f9)
-        # Evaluation
-        correct_prediction = np.equal(np.argmax(y_, 1), np.argmax(y, 1))
-        accuracy = np.mean(np.array(correct_prediction, dtype=np.float32))
-        return accuracy
+        f10 = self.softmax.forward(f9)
+        return f10

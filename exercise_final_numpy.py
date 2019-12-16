@@ -124,45 +124,45 @@ def one_hot(labels, n_class):
     return np.array([[1 if i == l else 0 for i in range(n_class)] for l in labels])
 
 # experiments_task_mlp
-# experiments_task_mlp = []
-# model = Modules.MLP()
-# settings = [(5, 0.0001), (5, 0.005), (5, 0.1)]         # train_epoch && learning_rate
-# print('Trainging Model_MLP')
-# for (num_epochs, learning_rate) in settings:
-#     # Train
-#     train_accuracy, test_accuracy, train_loss = [], [], []
-#     for epoch in range(num_epochs):
-#         # train
-#         correct = 0
-#         total = 0
-#         sum_loss = 0.0  # 用来每LOG_ITERATIONS打印一次平均loss
-#         for batch_idx, (inputs, labels) in enumerate(train_loader):
-#             inputs, labels = inputs.numpy(), labels.numpy()
-#             labels_one_hot = one_hot(labels, N_CLASS)  # one-hot
-#             loss, predicted = model.train(inputs, labels_one_hot, learning_rate)
-#             total += labels.shape[0]
-#             correct += (predicted == labels).sum()
-#             sum_loss += loss
-#             if batch_idx != 0 and batch_idx % LOG_ITERATIONS == 0:
-#                 train_loss.append(sum_loss / LOG_ITERATIONS)
-#                 print('epoch: %d, batch_idx: %d average_batch_loss: %f'
-#                       % (epoch + 1, batch_idx, sum_loss / LOG_ITERATIONS))
-#                 sum_loss = 0.0
-#         train_accuracy.append(100 * correct / total)
-#         # test
-#         correct = 0
-#         total = 0
-#         for (inputs, labels) in test_loader:
-#             inputs, labels = inputs.numpy(), labels.numpy()
-#             outputs = model.eval(inputs)
-#             # 取得分最高的那个类
-#             predicted = np.argmax(outputs, 1)
-#             total += labels.shape[0]
-#             correct += (predicted == labels).sum()
-#         print('第%d个epoch的测试集识别准确率为：%f%%' % (epoch + 1, (100 * correct / total)))
-#         test_accuracy.append(100 * correct / total)
-#         # torch.save(model.state_dict(), '%s/net_%03d.pth' % (opt.outf, epoch + 1))
-#     experiments_task_mlp.append(((num_epochs, learning_rate), train_accuracy, test_accuracy, train_loss))
+experiments_task_mlp = []
+model = Modules.MLP()
+settings = [(5, 0.0001), (5, 0.005), (5, 0.1)]         # train_epoch && learning_rate
+print('Trainging Model_MLP')
+for (num_epochs, learning_rate) in settings:
+    # Train
+    train_accuracy, test_accuracy, train_loss = [], [], []
+    for epoch in range(num_epochs):
+        # train
+        correct = 0
+        total = 0
+        sum_loss = 0.0  # 用来每LOG_ITERATIONS打印一次平均loss
+        for batch_idx, (inputs, labels) in enumerate(train_loader):
+            inputs, labels = inputs.numpy(), labels.numpy()
+            labels_one_hot = one_hot(labels, N_CLASS)  # one-hot
+            loss, predicted = model.train(inputs, labels_one_hot, learning_rate)
+            total += labels.shape[0]
+            correct += (predicted == labels).sum()
+            sum_loss += loss
+            if batch_idx != 0 and batch_idx % LOG_ITERATIONS == 0:
+                train_loss.append(sum_loss / LOG_ITERATIONS)
+                print('epoch: %d, batch_idx: %d average_batch_loss: %f'
+                      % (epoch + 1, batch_idx, sum_loss / LOG_ITERATIONS))
+                sum_loss = 0.0
+        train_accuracy.append(100 * correct / total)
+        # test
+        correct = 0
+        total = 0
+        for (inputs, labels) in test_loader:
+            inputs, labels = inputs.numpy(), labels.numpy()
+            outputs = model.eval(inputs)
+            # 取得分最高的那个类
+            predicted = np.argmax(outputs, 1)
+            total += labels.shape[0]
+            correct += (predicted == labels).sum()
+        print('第%d个epoch的测试集识别准确率为：%f%%' % (epoch + 1, (100 * correct / total)))
+        test_accuracy.append(100 * correct / total)
+        # torch.save(model.state_dict(), '%s/net_%03d.pth' % (opt.outf, epoch + 1))
+    experiments_task_mlp.append(((num_epochs, learning_rate), train_accuracy, test_accuracy, train_loss))
 
 # experiments_task_lenet
 experiments_task_lenet = []
@@ -206,7 +206,7 @@ for (num_epochs, learning_rate) in settings:
     experiments_task_lenet.append(((num_epochs, learning_rate), train_accuracy, test_accuracy, train_loss))
 
 
-plot_accuracy_curves([experiments_task_lenet])
-plot_summary_table([experiments_task_lenet])
-plot_loss_curves([experiments_task_lenet])
+plot_accuracy_curves([experiments_task_mlp, experiments_task_lenet])
+plot_summary_table([experiments_task_mlp, experiments_task_lenet])
+plot_loss_curves([experiments_task_mlp, experiments_task_lenet])
 

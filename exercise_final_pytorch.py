@@ -8,6 +8,7 @@ from torchvision import datasets, transforms
 
 # 定义是否使用GPU
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+# 定义Summary_Writer，数据放在指定文件夹
 writer = SummaryWriter('./Result')
 
 # parser = argparse.ArgumentParser()
