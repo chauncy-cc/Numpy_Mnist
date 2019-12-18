@@ -2,11 +2,56 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="cd10a7cf-968e-4ad4-9325-15ca5496d798" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/Modules/LeNet.py" beforeDir="false" afterPath="$PROJECT_DIR$/Modules/LeNet.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Result/numpy/lenet/events.out.tfevents.1576489580.DESKTOP-870CTO5" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Result/numpy/lenet/events.out.tfevents.1576675832.DESKTOP-870CTO5" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Result/numpy/lenet/events.out.tfevents.1576676050.DESKTOP-870CTO5" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Result/numpy/lenet/events.out.tfevents.1576676078.DESKTOP-870CTO5" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Result/numpy/lenet/events.out.tfevents.1576676275.DESKTOP-870CTO5" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Result/numpy/lenet/events.out.tfevents.1576676351.DESKTOP-870CTO5" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Result/numpy/mlp/events.out.tfevents.1576489580.DESKTOP-870CTO5" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Result/numpy/mlp/events.out.tfevents.1576675832.DESKTOP-870CTO5" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Result/numpy/mlp/events.out.tfevents.1576676050.DESKTOP-870CTO5" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Result/numpy/mlp/events.out.tfevents.1576676078.DESKTOP-870CTO5" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Result/numpy/mlp/events.out.tfevents.1576676275.DESKTOP-870CTO5" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Result/numpy/mlp/events.out.tfevents.1576676351.DESKTOP-870CTO5" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Result/pytorch/lenet/events.out.tfevents.1576506647.DESKTOP-870CTO5" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Result/pytorch/lenet/events.out.tfevents.1576506671.DESKTOP-870CTO5" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Result/pytorch/lenet/events.out.tfevents.1576653582.DESKTOP-870CTO5" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Result/pytorch/lenet/events.out.tfevents.1576653771.DESKTOP-870CTO5" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Result/pytorch/lenet/events.out.tfevents.1576654125.DESKTOP-870CTO5" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Result/pytorch/lenet/events.out.tfevents.1576654739.DESKTOP-870CTO5" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Result/pytorch/lenet/events.out.tfevents.1576667540.DESKTOP-870CTO5" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Result/pytorch/lenet/events.out.tfevents.1576669826.DESKTOP-870CTO5" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Result/pytorch/lenet/events.out.tfevents.1576671893.DESKTOP-870CTO5" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Result/pytorch/lenet/events.out.tfevents.1576672091.DESKTOP-870CTO5" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Result/pytorch/lenet/events.out.tfevents.1576672590.DESKTOP-870CTO5" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Result/pytorch/lenet/events.out.tfevents.1576673449.DESKTOP-870CTO5" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Result/pytorch/lenet/events.out.tfevents.1576673481.DESKTOP-870CTO5" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Result/pytorch/lenet/events.out.tfevents.1576673485.DESKTOP-870CTO5" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Result/pytorch/lenet/events.out.tfevents.1576673531.DESKTOP-870CTO5" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Result/pytorch/lenet/events.out.tfevents.1576674136.DESKTOP-870CTO5" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Result/pytorch/lenet/events.out.tfevents.1576674246.DESKTOP-870CTO5" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Result/pytorch/lenet/events.out.tfevents.1576674282.DESKTOP-870CTO5" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Result/pytorch/mlp/events.out.tfevents.1576506647.DESKTOP-870CTO5" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Result/pytorch/mlp/events.out.tfevents.1576506671.DESKTOP-870CTO5" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Result/pytorch/mlp/events.out.tfevents.1576653582.DESKTOP-870CTO5" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Result/pytorch/mlp/events.out.tfevents.1576653771.DESKTOP-870CTO5" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Result/pytorch/mlp/events.out.tfevents.1576654125.DESKTOP-870CTO5" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Result/pytorch/mlp/events.out.tfevents.1576654739.DESKTOP-870CTO5" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Result/pytorch/mlp/events.out.tfevents.1576667540.DESKTOP-870CTO5" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Result/pytorch/mlp/events.out.tfevents.1576669826.DESKTOP-870CTO5" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Result/pytorch/mlp/events.out.tfevents.1576671893.DESKTOP-870CTO5" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Result/pytorch/mlp/events.out.tfevents.1576672091.DESKTOP-870CTO5" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Result/pytorch/mlp/events.out.tfevents.1576672590.DESKTOP-870CTO5" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Result/pytorch/mlp/events.out.tfevents.1576673449.DESKTOP-870CTO5" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Result/pytorch/mlp/events.out.tfevents.1576673481.DESKTOP-870CTO5" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Result/pytorch/mlp/events.out.tfevents.1576673485.DESKTOP-870CTO5" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Result/pytorch/mlp/events.out.tfevents.1576673531.DESKTOP-870CTO5" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Result/pytorch/mlp/events.out.tfevents.1576674136.DESKTOP-870CTO5" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Result/pytorch/mlp/events.out.tfevents.1576674246.DESKTOP-870CTO5" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Result/pytorch/mlp/events.out.tfevents.1576674282.DESKTOP-870CTO5" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/exercise_final_numpy.py" beforeDir="false" afterPath="$PROJECT_DIR$/exercise_final_numpy.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/exercise_final_pytorch.py" beforeDir="false" afterPath="$PROJECT_DIR$/exercise_final_pytorch.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/nn/conv.py" beforeDir="false" afterPath="$PROJECT_DIR$/nn/conv.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/nn/pooling.py" beforeDir="false" afterPath="$PROJECT_DIR$/nn/pooling.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/plot_util.py" beforeDir="false" afterPath="$PROJECT_DIR$/plot_util.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -20,11 +65,20 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/exercise_final_numpy.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1102">
-              <caret line="118" column="22" selection-start-line="118" selection-start-column="22" selection-end-line="118" selection-end-column="22" />
+            <state relative-caret-position="198">
+              <caret line="11" selection-start-line="11" selection-end-line="11" />
               <folding>
                 <element signature="e#0#9#0" expanded="true" />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/.gitignore">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="18">
+              <caret line="1" column="4" lean-forward="true" selection-start-line="1" selection-start-column="4" selection-end-line="1" selection-end-column="4" />
             </state>
           </provider>
         </entry>
@@ -44,11 +98,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/plot_util.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="198">
-              <caret line="11" column="31" selection-start-line="11" selection-start-column="31" selection-end-line="11" selection-end-column="31" />
-              <folding>
-                <element signature="e#0#24#0" expanded="true" />
-              </folding>
+            <state relative-caret-position="36">
+              <caret line="2" column="31" selection-start-line="2" selection-start-column="31" selection-end-line="2" selection-end-column="31" />
             </state>
           </provider>
         </entry>
@@ -66,19 +117,31 @@
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/nn/loss.py">
+        <entry file="file://$PROJECT_DIR$/nn/activation.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="288">
-              <caret line="16" column="17" lean-forward="true" selection-start-line="16" selection-start-column="17" selection-end-line="16" selection-end-column="17" />
+            <state relative-caret-position="414">
+              <caret line="23" column="12" lean-forward="true" selection-start-line="23" selection-start-column="12" selection-end-line="23" selection-end-column="12" />
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/nn/pooling.py">
+        <entry file="file://$PROJECT_DIR$/nn/__init__.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="436">
-              <caret line="47" column="38" selection-start-line="47" selection-start-column="38" selection-end-line="47" selection-end-column="38" />
+            <state relative-caret-position="180">
+              <caret line="10" column="23" selection-start-line="10" selection-start-column="23" selection-end-line="10" selection-end-column="23" />
+              <folding>
+                <element signature="e#0#26#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/nn/conv.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="432">
+              <caret line="66" column="13" lean-forward="true" selection-start-line="66" selection-start-column="13" selection-end-line="66" selection-end-column="13" />
               <folding>
                 <element signature="e#0#18#0" expanded="true" />
               </folding>
@@ -93,27 +156,6 @@
               <caret line="26" column="22" selection-start-line="26" selection-start-column="22" selection-end-line="26" selection-end-column="22" />
               <folding>
                 <element signature="e#0#9#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/nn/activation.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="388">
-              <caret line="23" column="12" lean-forward="true" selection-start-line="23" selection-start-column="12" selection-end-line="23" selection-end-column="12" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/nn/conv.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="432">
-              <caret line="66" column="13" lean-forward="true" selection-start-line="66" selection-start-column="13" selection-end-line="66" selection-end-column="13" />
-              <folding>
-                <element signature="e#0#18#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -174,8 +216,8 @@
         <option value="$PROJECT_DIR$/Modules/LeNet.py" />
         <option value="$PROJECT_DIR$/nn/conv.py" />
         <option value="$PROJECT_DIR$/nn/pooling.py" />
-        <option value="$PROJECT_DIR$/exercise_final_numpy.py" />
         <option value="$PROJECT_DIR$/exercise_final_pytorch.py" />
+        <option value="$PROJECT_DIR$/exercise_final_numpy.py" />
         <option value="$PROJECT_DIR$/plot_util.py" />
       </list>
     </option>
@@ -212,6 +254,23 @@
               <item name="Numpy_Mnist" type="b2602c69:ProjectViewProjectNode" />
               <item name="Numpy_Mnist" type="462c0819:PsiDirectoryNode" />
               <item name="nn" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="Numpy_Mnist" type="b2602c69:ProjectViewProjectNode" />
+              <item name="Numpy_Mnist" type="462c0819:PsiDirectoryNode" />
+              <item name="Result" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="Numpy_Mnist" type="b2602c69:ProjectViewProjectNode" />
+              <item name="Numpy_Mnist" type="462c0819:PsiDirectoryNode" />
+              <item name="Result" type="462c0819:PsiDirectoryNode" />
+              <item name="numpy" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="Numpy_Mnist" type="b2602c69:ProjectViewProjectNode" />
+              <item name="Numpy_Mnist" type="462c0819:PsiDirectoryNode" />
+              <item name="Result" type="462c0819:PsiDirectoryNode" />
+              <item name="pytorch" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
@@ -340,7 +399,7 @@
     <frame x="1592" y="-8" width="2064" height="1128" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.122902274" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.26999012" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
@@ -455,16 +514,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/nn/__init__.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="180">
-          <caret line="10" column="23" selection-start-line="10" selection-start-column="23" selection-end-line="10" selection-end-column="23" />
-          <folding>
-            <element signature="e#0#26#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$USER_HOME$/Anaconda3/envs/pytorch/Lib/site-packages/torch/nn/functional.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-646">
@@ -524,16 +573,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Modules/MLP.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="360">
-          <caret line="21" column="36" selection-start-line="20" selection-start-column="8" selection-end-line="21" selection-end-column="36" />
-          <folding>
-            <element signature="e#0#18#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/loss_curve_pytorch.png">
       <provider selected="true" editor-type-id="images" />
     </entry>
@@ -542,26 +581,6 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/accuracy_curve_pytorch.png">
       <provider selected="true" editor-type-id="images" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Modules/LeNet.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="238">
-          <caret line="26" column="22" selection-start-line="26" selection-start-column="22" selection-end-line="26" selection-end-column="22" />
-          <folding>
-            <element signature="e#0#9#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/nn/conv.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="432">
-          <caret line="66" column="13" lean-forward="true" selection-start-line="66" selection-start-column="13" selection-end-line="66" selection-end-column="13" />
-          <folding>
-            <element signature="e#0#18#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/nn/pooling.py">
       <provider selected="true" editor-type-id="text-editor">
@@ -587,20 +606,57 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/Modules/MLP.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="360">
+          <caret line="21" column="36" selection-start-line="20" selection-start-column="8" selection-end-line="21" selection-end-column="36" />
+          <folding>
+            <element signature="e#0#18#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Modules/LeNet.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="238">
+          <caret line="26" column="22" selection-start-line="26" selection-start-column="22" selection-end-line="26" selection-end-column="22" />
+          <folding>
+            <element signature="e#0#9#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/nn/conv.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="432">
+          <caret line="66" column="13" lean-forward="true" selection-start-line="66" selection-start-column="13" selection-end-line="66" selection-end-column="13" />
+          <folding>
+            <element signature="e#0#18#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/nn/activation.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="388">
+        <state relative-caret-position="414">
           <caret line="23" column="12" lean-forward="true" selection-start-line="23" selection-start-column="12" selection-end-line="23" selection-end-column="12" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/exercise_final_numpy.py">
+    <entry file="file://$PROJECT_DIR$/nn/__init__.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1102">
-          <caret line="118" column="22" selection-start-line="118" selection-start-column="22" selection-end-line="118" selection-end-column="22" />
+        <state relative-caret-position="180">
+          <caret line="10" column="23" selection-start-line="10" selection-start-column="23" selection-end-line="10" selection-end-column="23" />
           <folding>
-            <element signature="e#0#9#0" expanded="true" />
+            <element signature="e#0#26#0" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/.gitignore">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="18">
+          <caret line="1" column="4" lean-forward="true" selection-start-line="1" selection-start-column="4" selection-end-line="1" selection-end-column="4" />
         </state>
       </provider>
     </entry>
@@ -614,13 +670,20 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/plot_util.py">
+    <entry file="file://$PROJECT_DIR$/exercise_final_numpy.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="198">
-          <caret line="11" column="31" selection-start-line="11" selection-start-column="31" selection-end-line="11" selection-end-column="31" />
+          <caret line="11" selection-start-line="11" selection-end-line="11" />
           <folding>
-            <element signature="e#0#24#0" expanded="true" />
+            <element signature="e#0#9#0" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/plot_util.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="36">
+          <caret line="2" column="31" selection-start-line="2" selection-start-column="31" selection-end-line="2" selection-end-column="31" />
         </state>
       </provider>
     </entry>

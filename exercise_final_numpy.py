@@ -29,7 +29,7 @@ PIC_ITERATIONS = 10
 LOG_ITERATIONS = 100
 IS_RUN_ON_SERVER = True
 IS_PYTORCH_VERSION = False
-TRAIN_EPOCHS = 1 if IS_RUN_ON_SERVER else 1
+TRAIN_EPOCHS = 10 if IS_RUN_ON_SERVER else 1
 
 train_set = datasets.MNIST('./data',
                            train=True,
@@ -50,7 +50,7 @@ test_loader = DataLoader(dataset=test_set,
                          batch_size=BATCH_SIZE,
                          shuffle=False)
 
-
+@numba.jit
 def train_until_finish(num_epochs, model, learning_rate, experiments_task):
     train_accuracy, test_accuracy, train_loss = [], [], []
     for epoch in range(num_epochs):

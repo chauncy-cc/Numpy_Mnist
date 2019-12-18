@@ -1,6 +1,6 @@
 import matplotlib as mpl
-import matplotlib.pyplot as plt
 mpl.use('Agg')
+import matplotlib.pyplot as plt
 
 def plot_loss_curves(experiment_data, log_iterations, is_run_on_server, is_pytorch_version):
     # 生成图像
