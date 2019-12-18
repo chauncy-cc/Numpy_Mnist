@@ -2,22 +2,30 @@ import nn
 import copy
 import numba
 import Modules
+import argparse
 import warnings
+import plot_util
 import numpy as np
 import matplotlib.pyplot as plt
 import torch.nn.functional as F
+from tensorboardX import SummaryWriter
 from torch.utils.data import DataLoader
 from torchvision import datasets, transforms
 
 
 warnings.filterwarnings('ignore')
 
-# 卷积核是4维，还是要写4维，因为输入通道就1，但是输出通道可以尝试一下调参数
+# 定义Summary_Writer，数据放在指定文件夹
+writer_mlp = SummaryWriter('./Result/numpy/mlp')
+writer_lenet = SummaryWriter('./Result/numpy/lenet')
 
 # Global variables
 N_CLASS = 10
 BATCH_SIZE = 64
+PIC_ITERATIONS = 10
 LOG_ITERATIONS = 100
+IS_RUN_ON_SERVER = False
+IS_PYTORCH_VERSION = False
 
 
 train_set = datasets.MNIST('./data',
@@ -40,84 +48,43 @@ test_loader = DataLoader(dataset=test_set,
                          shuffle=False)
 
 
-def plot_loss_curves(experiment_data):
-    # 生成图像.
-    fig, axes = plt.subplots(3, 2, figsize=(22, 12))
-    st = fig.suptitle(
-        "Loss Curves for all Tasks and Hyper-parameter settings",
-        fontsize="x-large"
-    )
-    # 画出所有的学习曲线. i表示不同模型，j表示不同setting
-    for i, results in enumerate(experiment_data):
-        for j, (setting, _, _, train_loss) in enumerate(results):
-            # Plot.
-            xs = [x * LOG_ITERATIONS for x in range(1, len(train_loss) + 1)]
-            axes[j, i].plot(xs, train_loss, label='train_loss')
-            # Prettify individual plots
-            axes[j, i].ticklabel_format(style='sci', axis='x', scilimits=(0, 0))
-            axes[j, i].set_xlabel('Number of Train Iterations')
-            axes[j, i].set_ylabel('Epochs: {}, Learning rate: {}. Loss'.format(*setting))
-            axes[j, i].set_title('Task {}'.format(i + 1))
-            axes[j, i].legend()
-        # Prettify overall figure.
-        plt.tight_layout()
-        st.set_y(0.95)
-        fig.subplots_adjust(top=0.91)
-        plt.show()
+def train(epoch):
+    log_loss = 0.0
+    pic_loss = 0.0
+    for batch_idx, (inputs, labels) in enumerate(train_loader):
+        inputs, labels = inputs.to(device), labels.to(device)
+        optimizer.zero_grad()
+        # forward + backward + step
+        outputs = model(inputs)
+        loss = criterion(outputs, labels)
+        loss.backward()
+        optimizer.step()
+        log_loss += loss.item()
+        pic_loss += loss.item()
+        if batch_idx != 0 and batch_idx % LOG_ITERATIONS == 0:
+            print('epoch: %d, batch_idx: %d average_batch_loss: %f'
+                  % (epoch + 1, batch_idx, log_loss / LOG_ITERATIONS))
+            log_loss = 0.0
+        if batch_idx != 0 and batch_idx % PIC_ITERATIONS == 0:
+            niter = epoch * len(train_loader) + batch_idx
+            writer_lenet.add_scalar('Train/Loss', pic_loss / PIC_ITERATIONS, niter)
+            pic_loss = 0.0
 
 
-def plot_accuracy_curves(experiment_data):
-    # 生成图像.
-    fig, axes = plt.subplots(3, 2, figsize=(22, 12))
-    st = fig.suptitle(
-        "Accuracy Curves for all Tasks and Hyper-parameter settings",
-        fontsize="x-large"
-    )
-    # 画出所有的学习曲线. i表示不同模型，j表示不同setting
-    for i, results in enumerate(experiment_data):
-        for j, (setting, train_accuracy, test_accuracy, _) in enumerate(results):
-            # Plot.
-            xs = [x for x in range(1, len(train_accuracy) + 1)]
-            axes[j, i].plot(xs, train_accuracy, label='train_accuracy')
-            axes[j, i].plot(xs, test_accuracy, label='test_accuracy')
-            # Prettify individual plots
-            axes[j, i].ticklabel_format(style='sci', axis='x', scilimits=(0, 0))
-            axes[j, i].set_xlabel('Number of Epochs')
-            axes[j, i].set_ylabel('Epochs: {}, Learning rate: {}. Accuracy'.format(*setting))
-            axes[j, i].set_title('Task {}'.format(i+1))
-            axes[j, i].legend()
-        # Prettify overall figure.
-        plt.tight_layout()
-        st.set_y(0.95)
-        fig.subplots_adjust(top=0.91)
-        plt.show()
+def test(epoch):
+    correct = 0
+    total = 0
+    for (inputs, labels) in test_loader:
+        inputs, labels = inputs.numpy(), labels.numpy()
+        outputs = model(inputs)
+        # 取得分最高的那个类
+        _, predicted = np.max(outputs.data, 1)
+        total += labels.size(0)
+        correct += (predicted == labels).sum()
+    print('%dth epoch\'s classification accuracy is: %f%%' % (epoch + 1, (100 * correct / total)))
+    writer_lenet.add_scalar('Test/Accu', (100 * correct / total), epoch * len(train_loader))
 
-# 生成结果的摘要表
-def plot_summary_table(experiment_data):
-    # 填充数据
-    cell_text = []
-    rows = []
-    columns = ['Setting 1', 'Setting 2', 'Setting 3']
-    for i, results in enumerate(experiment_data):
-        rows.append('Model {}'.format(i + 1))
-        cell_text.append([])
-        for j, (setting, train_accuracy, test_accuracy, train_loss) in enumerate(results):
-            cell_text[i].append(test_accuracy[-1])
-    # 生成表
-    fig = plt.figure(frameon=False)
-    ax = plt.gca()
-    the_table = ax.table(
-        cellText = cell_text,
-        rowLabels = rows,
-        colLabels = columns,
-        loc = 'center'
-    )
-    the_table.scale(1, 4)
-    # Prettify.
-    ax.patch.set_facecolor('None')
-    ax.xaxis.set_visible(False)
-    ax.yaxis.set_visible(False)
-    plt.show()
+
 
 # 把labels变成one-hot形式
 def one_hot(labels, n_class):
@@ -136,6 +103,7 @@ for (num_epochs, learning_rate) in settings:
         correct = 0
         total = 0
         sum_loss = 0.0  # 用来每LOG_ITERATIONS打印一次平均loss
+        pic_loss = 0.0
         for batch_idx, (inputs, labels) in enumerate(train_loader):
             inputs, labels = inputs.numpy(), labels.numpy()
             labels_one_hot = one_hot(labels, N_CLASS)  # one-hot
@@ -143,11 +111,16 @@ for (num_epochs, learning_rate) in settings:
             total += labels.shape[0]
             correct += (predicted == labels).sum()
             sum_loss += loss
+            pic_loss += loss
             if batch_idx != 0 and batch_idx % LOG_ITERATIONS == 0:
                 train_loss.append(sum_loss / LOG_ITERATIONS)
                 print('epoch: %d, batch_idx: %d average_batch_loss: %f'
                       % (epoch + 1, batch_idx, sum_loss / LOG_ITERATIONS))
                 sum_loss = 0.0
+            if batch_idx != 0 and batch_idx % PIC_ITERATIONS == 0:
+                niter = epoch * len(train_loader) + batch_idx
+                writer_mlp.add_scalar('Train/Loss', pic_loss / PIC_ITERATIONS, niter)
+                pic_loss = 0.0
         train_accuracy.append(100 * correct / total)
         # test
         correct = 0
@@ -161,6 +134,7 @@ for (num_epochs, learning_rate) in settings:
             correct += (predicted == labels).sum()
         print('%dth epoch\'s classification accuracy is: %f%%' % (epoch + 1, (100 * correct / total)))
         test_accuracy.append(100 * correct / total)
+        writer_mlp.add_scalar('Test/Accu', (100 * correct / total), epoch * len(train_loader))
         # torch.save(model.state_dict(), '%s/net_%03d.pth' % (opt.outf, epoch + 1))
     experiments_task_mlp.append(((num_epochs, learning_rate), train_accuracy, test_accuracy, train_loss))
 
@@ -177,6 +151,7 @@ for (num_epochs, learning_rate) in settings:
         correct = 0
         total = 0
         sum_loss = 0.0  # 用来每LOG_ITERATIONS打印一次平均loss
+        pic_loss = 0.0
         for batch_idx, (inputs, labels) in enumerate(train_loader):
             inputs, labels = inputs.numpy(), labels.numpy()
             labels_one_hot = one_hot(labels, N_CLASS)  # one-hot
@@ -184,11 +159,16 @@ for (num_epochs, learning_rate) in settings:
             total += labels.shape[0]
             correct += (predicted == labels).sum()
             sum_loss += loss
+            pic_loss += loss
             if batch_idx != 0 and batch_idx % LOG_ITERATIONS == 0:
-                train_loss.append(sum_loss / LOG_ITERATIONS)
                 print('epoch: %d, batch_idx: %d average_batch_loss: %f'
                       % (epoch + 1, batch_idx, sum_loss / LOG_ITERATIONS))
                 sum_loss = 0.0
+            if batch_idx != 0 and batch_idx % PIC_ITERATIONS == 0:
+                niter = epoch * len(train_loader) + batch_idx
+                writer_lenet.add_scalar('Train/Loss', pic_loss / PIC_ITERATIONS, niter)
+                train_loss.append(pic_loss / PIC_ITERATIONS)
+                pic_loss = 0.0
         train_accuracy.append(100 * correct / total)
         # test
         correct = 0
@@ -203,10 +183,11 @@ for (num_epochs, learning_rate) in settings:
         print('%dth epoch\'s classification accuracy is: %f%%' % (epoch + 1, (100 * correct / total)))
         test_accuracy.append(100 * correct / total)
         # torch.save(model.state_dict(), '%s/net_%03d.pth' % (opt.outf, epoch + 1))
+        writer_lenet.add_scalar('Test/Accu', (100 * correct / total), epoch * len(train_loader))
     experiments_task_lenet.append(((num_epochs, learning_rate), train_accuracy, test_accuracy, train_loss))
 
 
-plot_accuracy_curves([experiments_task_mlp, experiments_task_lenet])
-plot_summary_table([experiments_task_mlp, experiments_task_lenet])
-plot_loss_curves([experiments_task_mlp, experiments_task_lenet])
+plot_util.plot_accuracy_curves([experiments_task_mlp, experiments_task_lenet], LOG_ITERATIONS)
+plot_util.plot_summary_table([experiments_task_mlp, experiments_task_lenet])
+plot_util.plot_loss_curves([experiments_task_mlp, experiments_task_lenet])
 
