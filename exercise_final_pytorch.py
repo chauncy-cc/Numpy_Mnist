@@ -169,10 +169,10 @@ settings = [(10, 0.0001), (10, 0.005), (10, 0.001)]         # train_epoch && lea
 experiments_task_mlp = []
 experiments_task_lenet = []
 for index_setting, (num_epochs, learning_rate) in enumerate(settings):
-    model_mlp.__init__()
+    model_mlp = MLP().to(device)
     print("model_mlp is initialized. %dth Train setting is %d and %f" % (index_setting, num_epochs, learning_rate))
     train_until_finish(num_epochs, model=model_mlp, optimizer=optimizer_mlp, learning_rate=learning_rate, experiments_task=experiments_task_mlp)
-    model_lenet.__init__()
+    model_lenet = LeNet().to(device)
     print("model_lenet is initialzed. %dth Train setting is %d and %f" % (index_setting, num_epochs, learning_rate))
     train_until_finish(num_epochs, model=model_lenet, optimizer=optimizer_lenet, learning_rate=learning_rate, experiments_task=experiments_task_lenet)
 
