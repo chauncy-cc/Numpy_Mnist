@@ -27,8 +27,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/exercise_final_pytorch.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="384">
-              <caret line="176" column="138" lean-forward="true" selection-start-line="176" selection-start-column="138" selection-end-line="176" selection-end-column="138" />
+            <state relative-caret-position="454">
+              <caret line="174" column="74" lean-forward="true" selection-start-line="174" selection-start-column="74" selection-end-line="174" selection-end-column="74" />
               <folding>
                 <element signature="e#0#12#0" expanded="true" />
               </folding>
@@ -186,6 +186,11 @@
             <path>
               <item name="Numpy_Mnist" type="b2602c69:ProjectViewProjectNode" />
               <item name="Numpy_Mnist" type="462c0819:PsiDirectoryNode" />
+              <item name="model_save" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="Numpy_Mnist" type="b2602c69:ProjectViewProjectNode" />
+              <item name="Numpy_Mnist" type="462c0819:PsiDirectoryNode" />
               <item name="Modules" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
@@ -315,13 +320,13 @@
     <frame x="1592" y="-8" width="2064" height="1128" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.122902274" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.122902274" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" />
-      <window_info anchor="bottom" id="Run" order="2" weight="0.30945557" />
-      <window_info active="true" anchor="bottom" id="Debug" order="3" visible="true" weight="0.39738432" />
+      <window_info anchor="bottom" id="Run" order="2" visible="true" weight="0.30885312" />
+      <window_info anchor="bottom" id="Debug" order="3" weight="0.39738432" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="6" />
@@ -579,8 +584,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/exercise_final_pytorch.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="384">
-          <caret line="176" column="138" lean-forward="true" selection-start-line="176" selection-start-column="138" selection-end-line="176" selection-end-column="138" />
+        <state relative-caret-position="454">
+          <caret line="174" column="74" lean-forward="true" selection-start-line="174" selection-start-column="74" selection-end-line="174" selection-end-column="74" />
           <folding>
             <element signature="e#0#12#0" expanded="true" />
           </folding>

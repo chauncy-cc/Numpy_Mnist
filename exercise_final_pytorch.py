@@ -28,7 +28,6 @@ BATCH_SIZE = 64
 TRAIN_EPOCHS = 25
 PIC_ITERATIONS = 10
 LOG_ITERATIONS = 100
-LEARNING_RATE = 0.001
 IS_PYTORCH_VERSION = True
 IS_RUN_ON_SERVER = opt.server
 
@@ -156,12 +155,7 @@ def test(epoch, test_accuracy, model):
         test_accuracy.append(100 * correct / total)
         writer_lenet.add_scalar('Test/Accu', (100 * correct / total), epoch * len(train_loader))
 
-
-# 定义损失函数和优化方式
-model_mlp = MLP().to(device)
-model_lenet = LeNet().to(device)
-optimizer_mlp = optim.SGD(model_mlp.parameters(), lr=LEARNING_RATE, momentum=MOMENTUM)
-optimizer_lenet = optim.SGD(model_lenet.parameters(), lr=LEARNING_RATE, momentum=MOMENTUM)
+# 定义损失函数
 criterion = nn.CrossEntropyLoss()
 
 # TODO： 各种优化器、是否分布式、学习率才是超参，epoch可以不在setting中设置
@@ -170,9 +164,11 @@ experiments_task_mlp = []
 experiments_task_lenet = []
 for index_setting, (num_epochs, learning_rate) in enumerate(settings):
     model_mlp = MLP().to(device)
+    optimizer_mlp = optim.SGD(model_mlp.parameters(), lr=learning_rate, momentum=MOMENTUM)
     print("model_mlp is initialized. %dth Train setting is %d and %f" % (index_setting, num_epochs, learning_rate))
     train_until_finish(num_epochs, model=model_mlp, optimizer=optimizer_mlp, learning_rate=learning_rate, experiments_task=experiments_task_mlp)
     model_lenet = LeNet().to(device)
+    optimizer_lenet = optim.SGD(model_lenet.parameters(), lr=learning_rate, momentum=MOMENTUM)
     print("model_lenet is initialzed. %dth Train setting is %d and %f" % (index_setting, num_epochs, learning_rate))
     train_until_finish(num_epochs, model=model_lenet, optimizer=optimizer_lenet, learning_rate=learning_rate, experiments_task=experiments_task_lenet)
 
