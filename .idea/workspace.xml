@@ -4,7 +4,6 @@
     <list default="true" id="cd10a7cf-968e-4ad4-9325-15ca5496d798" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/exercise_final_numpy.py" beforeDir="false" afterPath="$PROJECT_DIR$/exercise_final_numpy.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/exercise_final_pytorch.py" beforeDir="false" afterPath="$PROJECT_DIR$/exercise_final_pytorch.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/plot_util.py" beforeDir="false" afterPath="$PROJECT_DIR$/plot_util.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -14,11 +13,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/exercise_final_numpy.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="402">
-              <caret line="91" column="25" lean-forward="true" selection-start-line="91" selection-start-column="25" selection-end-line="91" selection-end-column="25" />
+            <state relative-caret-position="707">
+              <caret line="113" column="37" selection-start-line="113" selection-start-column="37" selection-end-line="113" selection-end-column="37" />
               <folding>
                 <element signature="e#0#9#0" expanded="true" />
               </folding>
@@ -35,11 +34,11 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/exercise_final_pytorch.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="455">
-              <caret line="143" column="17" selection-start-line="143" selection-start-column="17" selection-end-line="143" selection-end-column="17" />
+            <state relative-caret-position="1170">
+              <caret line="164" column="22" lean-forward="true" selection-start-line="164" selection-start-column="22" selection-end-line="164" selection-end-column="22" />
               <folding>
                 <element signature="e#0#12#0" expanded="true" />
               </folding>
@@ -135,8 +134,8 @@
         <option value="$PROJECT_DIR$/nn/pooling.py" />
         <option value="$PROJECT_DIR$/Modules/LeNet.py" />
         <option value="$PROJECT_DIR$/plot_util.py" />
-        <option value="$PROJECT_DIR$/exercise_final_numpy.py" />
         <option value="$PROJECT_DIR$/exercise_final_pytorch.py" />
+        <option value="$PROJECT_DIR$/exercise_final_numpy.py" />
       </list>
     </option>
   </component>
@@ -162,12 +161,6 @@
               <item name="Numpy_Mnist" type="b2602c69:ProjectViewProjectNode" />
               <item name="Numpy_Mnist" type="462c0819:PsiDirectoryNode" />
               <item name="model_save" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="Numpy_Mnist" type="b2602c69:ProjectViewProjectNode" />
-              <item name="Numpy_Mnist" type="462c0819:PsiDirectoryNode" />
-              <item name="model_save" type="462c0819:PsiDirectoryNode" />
-              <item name="pytorch" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="Numpy_Mnist" type="b2602c69:ProjectViewProjectNode" />
@@ -568,16 +561,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/exercise_final_numpy.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="402">
-          <caret line="91" column="25" lean-forward="true" selection-start-line="91" selection-start-column="25" selection-end-line="91" selection-end-column="25" />
-          <folding>
-            <element signature="e#0#9#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/loss_curve_pytorch.png">
       <provider selected="true" editor-type-id="images" />
     </entry>
@@ -596,10 +579,20 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/exercise_final_pytorch.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="455">
-          <caret line="143" column="17" selection-start-line="143" selection-start-column="17" selection-end-line="143" selection-end-column="17" />
+        <state relative-caret-position="1170">
+          <caret line="164" column="22" lean-forward="true" selection-start-line="164" selection-start-column="22" selection-end-line="164" selection-end-column="22" />
           <folding>
             <element signature="e#0#12#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/exercise_final_numpy.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="707">
+          <caret line="113" column="37" selection-start-line="113" selection-start-column="37" selection-end-line="113" selection-end-column="37" />
+          <folding>
+            <element signature="e#0#9#0" expanded="true" />
           </folding>
         </state>
       </provider>

@@ -108,10 +108,10 @@ experiments_task_lenet = []
 for index_setting, (num_epochs, learning_rate) in enumerate(settings):
     model = Modules.MLP()
     print("model_mlp is initialized. %dth Train setting is %d and %f" % (index_setting + 1, TRAIN_EPOCHS, learning_rate))
-    train_until_finish(num_epochs, model=model, learning_rate=learning_rate, experiments_task=experiments_task_mlp)
+    train_until_finish(TRAIN_EPOCHS, model=model, learning_rate=learning_rate, experiments_task=experiments_task_mlp)
     model = Modules.LeNet()
     print("model_lenet is initialzed. %dth Train setting is %d and %f" % (index_setting + 1, TRAIN_EPOCHS, learning_rate))
-    train_until_finish(num_epochs, model=model, learning_rate=learning_rate, experiments_task=experiments_task_lenet)
+    train_until_finish(TRAIN_EPOCHS, model=model, learning_rate=learning_rate, experiments_task=experiments_task_lenet)
 
 
 plot_util.plot_accuracy_curves([experiments_task_mlp, experiments_task_lenet], LOG_ITERATIONS)
