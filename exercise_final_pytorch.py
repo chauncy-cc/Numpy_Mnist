@@ -11,7 +11,7 @@ from torchvision import datasets, transforms
 
 # 定义是否使用GPU
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-print("device: " + device)
+print("device: " + device.type)
 # 定义Summary_Writer，数据放在指定文件夹
 writer_mlp = SummaryWriter('./Result/pytorch/mlp')
 writer_lenet = SummaryWriter('./Result/pytorch/lenet')
