@@ -1,5 +1,6 @@
 import torch
 import argparse
+import warnings
 import plot_util
 import torch.nn as nn
 import torch.optim as optim
@@ -8,9 +9,11 @@ from tensorboardX import SummaryWriter
 from torch.utils.data import DataLoader
 from torchvision import datasets, transforms
 
+warnings.filterwarnings('ignore')
 
 # 定义是否使用GPU
-device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+# device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+device = torch.device("cpu")
 print("device: " + device.type)
 # 定义Summary_Writer，数据放在指定文件夹
 writer_mlp = SummaryWriter('./Result/pytorch/mlp')
@@ -19,7 +22,8 @@ writer_lenet = SummaryWriter('./Result/pytorch/lenet')
 parser = argparse.ArgumentParser()
 parser.add_argument('--outf', default='./model_save/pytorch/', help='folder to output images and model checkpoints')   # 模型保存路径
 parser.add_argument('--net', default='./model_save/pytorch/net.pth', help="path to netG (to continue training)")       # 模型加载路径
-parser.add_argument('--server', default='true', help='is run on server or not')                                 # 是否跑在服务器
+parser.add_argument('--server', default='true', help='is run on server or not')                                        # 是否跑在服务器
+
 opt = parser.parse_args()
 
 # Hyper parameters
@@ -30,6 +34,7 @@ PIC_ITERATIONS = 10
 LOG_ITERATIONS = 100
 IS_PYTORCH_VERSION = True
 IS_RUN_ON_SERVER = opt.server
+TRAIN_EPOCHS = 10 if IS_RUN_ON_SERVER else 1
 
 
 train_set = datasets.MNIST('./data',
@@ -120,10 +125,9 @@ def train_until_finish(num_epochs, model, optimizer, learning_rate, experiments_
             optimizer.step()
             log_loss += loss.item()
             pic_loss += loss.item()
-
-            predicted = torch.argmax(F.softmax(outputs), 1)  # 算出模型输出
-            correct += (predicted == labels).sum()
-            total += labels.shape[0]
+            predicted = torch.argmax(F.softmax(outputs), 1)           # 算出模型输出
+            total += labels.size(0)
+            correct += (predicted.numpy() == labels.numpy()).sum()
 
             if batch_idx != 0 and batch_idx % LOG_ITERATIONS == 0:
                 print('epoch: %d, batch_idx: %d average_batch_loss: %f'
@@ -136,7 +140,7 @@ def train_until_finish(num_epochs, model, optimizer, learning_rate, experiments_
                 pic_loss = 0.0
         train_accuracy.append(100 * correct / total)
         test(epoch, test_accuracy, model)
-        torch.save(model.state_dict(), '%s/net_%03d.pth' % (opt.outf, epoch + 1))
+        # torch.save(model.state_dict(), '%s/net_%03d.pth' % (opt.outf, epoch + 1))
     experiments_task.append(((num_epochs, learning_rate), train_accuracy, test_accuracy, train_loss))
 
 
@@ -150,8 +154,8 @@ def test(epoch, test_accuracy, model):
             # 取得分最高的那个类
             _, predicted = torch.max(outputs.data, 1)
             total += labels.size(0)
-            correct += (predicted == labels).sum()
-        print('%dth epoch\'s classification accuracy is: %f%%' % (epoch + 1, (100 * correct / total)))
+            correct += (predicted.numpy() == labels.numpy()).sum()
+        print('%dth epoch\'s classification accuracy is: %.6f%%' % (epoch + 1, 100 * correct / total))
         test_accuracy.append(100 * correct / total)
         writer_lenet.add_scalar('Test/Accu', (100 * correct / total), epoch * len(train_loader))
 
@@ -159,18 +163,18 @@ def test(epoch, test_accuracy, model):
 criterion = nn.CrossEntropyLoss()
 
 # TODO： 各种优化器、是否分布式、学习率才是超参，epoch可以不在setting中设置
-settings = [(10, 0.0001), (10, 0.005), (10, 0.001)]         # train_epoch && learning_rate
+settings = [(1, 0.0001), (1, 0.005), (1, 0.001)]         # train_epoch && learning_rate
 experiments_task_mlp = []
 experiments_task_lenet = []
 for index_setting, (num_epochs, learning_rate) in enumerate(settings):
-    model_mlp = MLP().to(device)
-    optimizer_mlp = optim.SGD(model_mlp.parameters(), lr=learning_rate, momentum=MOMENTUM)
-    print("model_mlp is initialized. %dth Train setting is %d and %f" % (index_setting, num_epochs, learning_rate))
-    train_until_finish(num_epochs, model=model_mlp, optimizer=optimizer_mlp, learning_rate=learning_rate, experiments_task=experiments_task_mlp)
-    model_lenet = LeNet().to(device)
-    optimizer_lenet = optim.SGD(model_lenet.parameters(), lr=learning_rate, momentum=MOMENTUM)
-    print("model_lenet is initialzed. %dth Train setting is %d and %f" % (index_setting, num_epochs, learning_rate))
-    train_until_finish(num_epochs, model=model_lenet, optimizer=optimizer_lenet, learning_rate=learning_rate, experiments_task=experiments_task_lenet)
+    model = MLP().to(device)
+    optimizer = optim.SGD(model.parameters(), lr=learning_rate, momentum=MOMENTUM)
+    print("model_mlp is initialized. %dth Train setting is %d and %f" % (index_setting + 1, TRAIN_EPOCHS, learning_rate))
+    train_until_finish(num_epochs, model=model, optimizer=optimizer, learning_rate=learning_rate, experiments_task=experiments_task_mlp)
+    model = LeNet().to(device)
+    optimizer = optim.SGD(model.parameters(), lr=learning_rate, momentum=MOMENTUM)
+    print("model_lenet is initialzed. %dth Train setting is %d and %f" % (index_setting + 1, TRAIN_EPOCHS, learning_rate))
+    train_until_finish(num_epochs, model=model, optimizer=optimizer, learning_rate=learning_rate, experiments_task=experiments_task_lenet)
 
 plot_util.plot_accuracy_curves([experiments_task_mlp, experiments_task_lenet], IS_RUN_ON_SERVER, IS_PYTORCH_VERSION)
 plot_util.plot_summary_table([experiments_task_mlp, experiments_task_lenet], IS_RUN_ON_SERVER, IS_PYTORCH_VERSION)

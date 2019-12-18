@@ -1,12 +1,11 @@
-
 import matplotlib.pyplot as plt
 
 def plot_loss_curves(experiment_data, log_iterations, is_run_on_server, is_pytorch_version):
-    # 生成图像.
+    # 生成图像
     fig, axes = plt.subplots(3, 2, figsize=(22, 12))
     st = fig.suptitle(
         "Loss Curves for all Tasks and Hyper-parameter settings",
-        fontsize="x-large"
+        fontsize = "x-large"
     )
     # 画出所有的学习曲线. i表示不同模型，j表示不同setting
     for i, results in enumerate(experiment_data):
@@ -25,8 +24,7 @@ def plot_loss_curves(experiment_data, log_iterations, is_run_on_server, is_pytor
         st.set_y(0.95)
         fig.subplots_adjust(top=0.91)
         if is_pytorch_version:
-            file_name = "loss_curve_pytorch.png"
-            plt.savefig(file_name)
+            plt.savefig("loss_curve_pytorch.png")
         else:
             plt.savefig("loss_curve_numpy.png")
         if not is_run_on_server:
