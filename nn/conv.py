@@ -1,5 +1,6 @@
 import numpy as np
 import copy
+import numba
 
 # 定义卷积层模型
 class Conv2d:
@@ -11,6 +12,7 @@ class Conv2d:
         self.stride = stride
         self.padding = padding
 
+    @numba.jit
     def forward(self, x):
         out_channels, in_channels, kernel_size, kernel_size = self.w.shape
         batch_size, in_channels, x_h, x_w = x.shape
@@ -51,6 +53,7 @@ class Conv2d:
 
         return y
 
+    @numba.jit
     def backward(self, dL_dy, x, lr):
         out_channels, in_channels, kernel_size, kernel_size = self.w.shape
         batch_size, in_channels, x_h, x_w = x.shape

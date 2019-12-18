@@ -1,5 +1,6 @@
 import nn
 import numpy as np
+import numba
 
 class LeNet:
     def __init__(self):
@@ -20,6 +21,7 @@ class LeNet:
         print('Model_LeNet constructed!')
 
     # Train process
+    @numba.jit
     def train(self, x, y_, learning_rate):
         # forward
         f1 = self.conv1.forward(x)

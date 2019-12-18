@@ -12,8 +12,7 @@ from torchvision import datasets, transforms
 warnings.filterwarnings('ignore')
 
 # 定义是否使用GPU
-# device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-device = torch.device("cpu")
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 print("device: " + device.type)
 # 定义Summary_Writer，数据放在指定文件夹
 writer_mlp = SummaryWriter('./Result/pytorch/mlp')
@@ -22,7 +21,7 @@ writer_lenet = SummaryWriter('./Result/pytorch/lenet')
 parser = argparse.ArgumentParser()
 parser.add_argument('--outf', default='./model_save/pytorch/', help='folder to output images and model checkpoints')   # 模型保存路径
 parser.add_argument('--net', default='./model_save/pytorch/net.pth', help="path to netG (to continue training)")       # 模型加载路径
-parser.add_argument('--server', default='true', help='is run on server or not')                                        # 是否跑在服务器
+parser.add_argument('--server', default='True', help='is run on server or not')                                        # 是否跑在服务器
 
 opt = parser.parse_args()
 
@@ -163,10 +162,12 @@ def test(epoch, test_accuracy, model):
 criterion = nn.CrossEntropyLoss()
 
 # TODO： 各种优化器、是否分布式、学习率才是超参，epoch可以不在setting中设置
-settings = [(1, 0.0001), (1, 0.005), (1, 0.001)]         # train_epoch && learning_rate
+settings = [(0, 0, 0.0001), (0, 0, 0.005), (0, 0, 0.001),
+            (0, 1, 0.0001), (0, 1, 0.005), (0, 1, 0.001),
+            (1, 0, 0.0001), (1, 0, 0.005), (1, 0, 0.001),]
 experiments_task_mlp = []
 experiments_task_lenet = []
-for index_setting, (num_epochs, learning_rate) in enumerate(settings):
+for index_setting, (_, _, learning_rate) in enumerate(settings):
     model = MLP().to(device)
     optimizer = optim.SGD(model.parameters(), lr=learning_rate, momentum=MOMENTUM)
     print("model_mlp is initialized. %dth Train setting is %d and %f" % (index_setting + 1, TRAIN_EPOCHS, learning_rate))

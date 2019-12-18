@@ -6,8 +6,6 @@ import argparse
 import warnings
 import plot_util
 import numpy as np
-import matplotlib.pyplot as plt
-import torch.nn.functional as F
 from tensorboardX import SummaryWriter
 from torch.utils.data import DataLoader
 from torchvision import datasets, transforms
@@ -31,7 +29,7 @@ PIC_ITERATIONS = 10
 LOG_ITERATIONS = 100
 IS_RUN_ON_SERVER = True
 IS_PYTORCH_VERSION = False
-TRAIN_EPOCHS = 10 if IS_RUN_ON_SERVER else 1
+TRAIN_EPOCHS = 1 if IS_RUN_ON_SERVER else 1
 
 train_set = datasets.MNIST('./data',
                            train=True,
@@ -102,10 +100,12 @@ def one_hot(labels, n_class):
     return np.array([[1 if i == l else 0 for i in range(n_class)] for l in labels])
 
 
-settings = [(10, 0.0001), (10, 0.005), (10, 0.001)]         # train_epoch && learning_rate
+settings = [(0, 0, 0.0001), (0, 0, 0.005), (0, 0, 0.001),
+            (0, 1, 0.0001), (0, 1, 0.005), (0, 1, 0.001),
+            (1, 0, 0.0001), (1, 0, 0.005), (1, 0, 0.001),]
 experiments_task_mlp = []
 experiments_task_lenet = []
-for index_setting, (num_epochs, learning_rate) in enumerate(settings):
+for index_setting, (_, _, learning_rate) in enumerate(settings):
     model = Modules.MLP()
     print("model_mlp is initialized. %dth Train setting is %d and %f" % (index_setting + 1, TRAIN_EPOCHS, learning_rate))
     train_until_finish(TRAIN_EPOCHS, model=model, learning_rate=learning_rate, experiments_task=experiments_task_mlp)
@@ -114,7 +114,7 @@ for index_setting, (num_epochs, learning_rate) in enumerate(settings):
     train_until_finish(TRAIN_EPOCHS, model=model, learning_rate=learning_rate, experiments_task=experiments_task_lenet)
 
 
-plot_util.plot_accuracy_curves([experiments_task_mlp, experiments_task_lenet], LOG_ITERATIONS)
-plot_util.plot_summary_table([experiments_task_mlp, experiments_task_lenet])
-plot_util.plot_loss_curves([experiments_task_mlp, experiments_task_lenet])
+plot_util.plot_accuracy_curves([experiments_task_mlp, experiments_task_lenet], IS_RUN_ON_SERVER, IS_PYTORCH_VERSION)
+plot_util.plot_summary_table([experiments_task_mlp, experiments_task_lenet], IS_RUN_ON_SERVER, IS_PYTORCH_VERSION)
+plot_util.plot_loss_curves([experiments_task_mlp, experiments_task_lenet], LOG_ITERATIONS, IS_RUN_ON_SERVER, IS_PYTORCH_VERSION)
 

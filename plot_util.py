@@ -1,4 +1,6 @@
+import matplotlib as mpl
 import matplotlib.pyplot as plt
+mpl.use('Agg')
 
 def plot_loss_curves(experiment_data, log_iterations, is_run_on_server, is_pytorch_version):
     # 生成图像
@@ -90,8 +92,13 @@ def plot_summary_table(experiment_data, is_run_on_server, is_pytorch_version):
     ax.xaxis.set_visible(False)
     ax.yaxis.set_visible(False)
     if is_pytorch_version:
-        plt.savefig("summary_table_pytorch.png")
+        plt.savefig("accuracy_summary_table_pytorch.png")
     else:
-        plt.savefig("summary_table_numpy.png")
+        plt.savefig("accuracy_summary_table_numpy.png")
     if not is_run_on_server:
         plt.show()
+
+
+# 生成训练时间的摘要表
+def plot_train_time_table():
+    pass

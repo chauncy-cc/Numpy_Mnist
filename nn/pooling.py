@@ -1,10 +1,12 @@
 import numpy as np
+import numba
 
 # 定义池化层
 class MaxPool2d:
     def __init__(self, kernel_size):
         self.kernel_size = kernel_size
 
+    @numba.jit
     def forward(self, x):
         (samples, cx, hx, wx) = x.shape
         hy = int(hx / self.kernel_size)
@@ -27,6 +29,7 @@ class MaxPool2d:
         y = np.reshape(y, (samples, cx, hy, -1))
         return y, max_idx
 
+    @numba.jit
     def backward(self, dL_dy, max_idx):
         (samples, cy, hy, wy) = dL_dy.shape
         dy_reshaped = np.reshape(dL_dy, (-1, 1))
