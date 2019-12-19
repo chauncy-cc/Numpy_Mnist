@@ -1,3 +1,7 @@
 Result
 data
 MNIST_data
+__pycache__
+.idea/workspace.xml
+Modules/__pycache__
+nn/__pychache__
