@@ -1,2 +1,7 @@
-./MNIST_data/
-./data/
+# data
+Result
+MNIST_data
+data
+
+# tmp
+.idea/workspace.xml
