@@ -1,6 +1,9 @@
+# data
 Result
 data
 MNIST_data
+
+# temp
 __pycache__
 .idea/workspace.xml
 Modules/__pycache__
