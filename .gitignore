@@ -2,6 +2,10 @@
 Result
 MNIST_data
 data
-
-# tmp
 .idea
+
+# temp
+__pycache__
+.idea/workspace.xml
+Modules/__pycache__
+nn/__pychache__

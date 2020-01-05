@@ -2,26 +2,34 @@ import nn
 import copy
 import numba
 import Modules
+import argparse
 import warnings
+import plot_util
 import numpy as np
-import matplotlib.pyplot as plt
-import torch.nn.functional as F
+from tensorboardX import SummaryWriter
 from torch.utils.data import DataLoader
 from torchvision import datasets, transforms
 
-
 warnings.filterwarnings('ignore')
 
-### 建议把更多的激活函数模块也写上去。然后多做测试。卷积尝试加速
-### 跟pytorch版本进行比对
-# 今天至少把线性的全部写出来，最后优化卷积的实现
-# 卷积核是4维，还是要写4维，因为输入通道就1，但是输出通道可以尝试一下调参数
+# 定义Summary_Writer，数据放在指定文件夹
+writer_mlp = SummaryWriter('./Result/numpy/mlp')
+writer_lenet = SummaryWriter('./Result/numpy/lenet')
+
+parser = argparse.ArgumentParser()
+parser.add_argument('--outf', default='./model_save/pytorch/', help='folder to output images and model checkpoints')   # 模型保存路径
+parser.add_argument('--net', default='./model_save/pytorch/net.pth', help="path to netG (to continue training)")       # 模型加载路径
+parser.add_argument('--server', default='true', help='is run on server or not')                                        # 是否跑在服务器
+opt = parser.parse_args()
 
 # Global variables
 N_CLASS = 10
 BATCH_SIZE = 64
+PIC_ITERATIONS = 10
 LOG_ITERATIONS = 100
-
+IS_RUN_ON_SERVER = True
+IS_PYTORCH_VERSION = False
+TRAIN_EPOCHS = 10 if IS_RUN_ON_SERVER else 1
 
 train_set = datasets.MNIST('./data',
                            train=True,
@@ -42,78 +50,14 @@ test_loader = DataLoader(dataset=test_set,
                          batch_size=BATCH_SIZE,
                          shuffle=False)
 
-
-def plot_learning_curves(experiment_data):
-    # 生成图像.
-    fig, axes = plt.subplots(3, 2, figsize=(22, 12))
-    st = fig.suptitle(
-        "Learning Curves for all Tasks and Hyper-parameter settings",
-        fontsize="x-large"
-    )
-    # 画出所有的学习曲线. i表示不同模型，j表示不同setting
-    for i, results in enumerate(experiment_data):
-        for j, (setting, train_accuracy, test_accuracy, train_loss) in enumerate(results):
-            # Plot.
-            # xs = [x * LOG_ITERATIONS for x in range(1, len(train_accuracy)+1)]    loss才是这么计算的
-            xs = [x * LOG_ITERATIONS for x in range(1, len(train_accuracy) + 1)]
-            axes[j, i].plot(xs, train_accuracy, label='train_accuracy')
-            axes[j, i].plot(xs, test_accuracy, label='test_accuracy')
-            # Prettify individual plots
-            axes[j, i].ticklabel_format(style='sci', axis='x', scilimits=(0, 0))
-            axes[j, i].set_xlabel('Number of Epochs')
-            axes[j, i].set_ylabel('Epochs: {}, Learning rate: {}. Accuracy'.format(*setting))
-            axes[j, i].set_title('Task {}'.format(i+1))
-            axes[j, i].legend()
-        # Prettify overall figure.
-        plt.tight_layout()
-        st.set_y(0.95)
-        fig.subplots_adjust(top=0.91)
-        plt.show()
-
-# 生成结果的摘要表
-def plot_summary_table(experiment_data):
-    # 填充数据
-    cell_text = []
-    rows = []
-    columns = ['Setting 1', 'Setting 2', 'Setting 3']
-    for i, results in enumerate(experiment_data):
-        rows.append('Model {}'.format(i + 1))
-        cell_text.append([])
-        for j, (setting, train_accuracy, test_accuracy, train_loss) in enumerate(results):
-            cell_text[i].append(test_accuracy[-1])
-    # 生成表
-    fig = plt.figure(frameon=False)
-    ax = plt.gca()
-    the_table = ax.table(
-        cellText = cell_text,
-        rowLabels = rows,
-        colLabels = columns,
-        loc = 'center'
-    )
-    the_table.scale(1, 4)
-    # Prettify.
-    ax.patch.set_facecolor('None')
-    ax.xaxis.set_visible(False)
-    ax.yaxis.set_visible(False)
-    plt.show()
-
-
-def one_hot(labels, n_class):
-    return np.array([[1 if i == l else 0 for i in range(n_class)] for l in labels])
-
-# 训练前先测试一下模型
-model = Modules.MLP()
-experiments_task_mlp = []
-settings = [(5, 0.0001), (5, 0.005), (5, 0.1)]
-print('Trainging Model_MLP')
-for (num_epochs, learning_rate) in settings:
-    # Train
+@numba.jit
+def train_until_finish(num_epochs, model, learning_rate, experiments_task):
     train_accuracy, test_accuracy, train_loss = [], [], []
     for epoch in range(num_epochs):
-        # train
         correct = 0
         total = 0
         sum_loss = 0.0  # 用来每LOG_ITERATIONS打印一次平均loss
+        pic_loss = 0.0
         for batch_idx, (inputs, labels) in enumerate(train_loader):
             inputs, labels = inputs.numpy(), labels.numpy()
             labels_one_hot = one_hot(labels, N_CLASS)  # one-hot
@@ -121,28 +65,57 @@ for (num_epochs, learning_rate) in settings:
             total += labels.shape[0]
             correct += (predicted == labels).sum()
             sum_loss += loss
+            pic_loss += loss
             if batch_idx != 0 and batch_idx % LOG_ITERATIONS == 0:
-                train_loss.append(sum_loss / LOG_ITERATIONS)
                 print('epoch: %d, batch_idx: %d average_batch_loss: %f'
                       % (epoch + 1, batch_idx, sum_loss / LOG_ITERATIONS))
                 sum_loss = 0.0
+            if batch_idx != 0 and batch_idx % PIC_ITERATIONS == 0:
+                niter = epoch * len(train_loader) + batch_idx
+                writer_lenet.add_scalar('Train/Loss', pic_loss / PIC_ITERATIONS, niter)
+                train_loss.append(pic_loss / PIC_ITERATIONS)
+                pic_loss = 0.0
         train_accuracy.append(100 * correct / total)
-        # test
-        correct = 0
-        total = 0
-        for (inputs, labels) in test_loader:
-            inputs, labels = inputs.numpy(), labels.numpy()
-            outputs = model.eval(inputs)
-            # 取得分最高的那个类
-            predicted = np.argmax(outputs, 1)
-            total += labels.shape[0]
-            correct += (predicted == labels).sum()
-        print('第%d个epoch的测试集识别准确率为：%f%%' % (epoch + 1, (100 * correct / total)))
-        test_accuracy.append(100 * correct / total)
-        # torch.save(model.state_dict(), '%s/net_%03d.pth' % (opt.outf, epoch + 1))
-    experiments_task_mlp.append(((num_epochs, learning_rate), train_accuracy, test_accuracy, train_loss))
+        test(epoch, test_accuracy, model)
+    experiments_task.append(((num_epochs, learning_rate), train_accuracy, test_accuracy, train_loss))
 
-plot_learning_curves([experiments_task_mlp])
-plot_summary_table([experiments_task_mlp])
 
+def test(epoch, test_accuracy, model):
+    correct = 0
+    total = 0
+    for (inputs, labels) in test_loader:
+        inputs, labels = inputs.numpy(), labels.numpy()
+        outputs = model.eval(inputs)
+        # 取得分最高的那个类
+        predicted = np.argmax(outputs, 1)
+        total += labels.shape[0]
+        correct += (predicted == labels).sum()
+    print('%dth epoch\'s classification accuracy is: %.6f%%' % (epoch + 1, 100 * correct / total))
+    test_accuracy.append(100 * correct / total)
+    writer_mlp.add_scalar('Test/Accu', (100 * correct / total), epoch * len(train_loader))
+
+
+# 把labels变成one-hot形式
+def one_hot(labels, n_class):
+    return np.array([[1 if i == l else 0 for i in range(n_class)] for l in labels])
+
+
+settings = [(0, 0, 0.0001), (0, 0, 0.005), (0, 0, 0.001),
+#            (0, 1, 0.0001), (0, 1, 0.005), (0, 1, 0.001),
+#            (1, 0, 0.0001), (1, 0, 0.005), (1, 0, 0.001),
+            ]
+experiments_task_mlp = []
+experiments_task_lenet = []
+for index_setting, (_, _, learning_rate) in enumerate(settings):
+    model = Modules.MLP()
+    print("model_mlp is initialized. %dth Train setting is %d and %f" % (index_setting + 1, TRAIN_EPOCHS, learning_rate))
+    train_until_finish(TRAIN_EPOCHS, model=model, learning_rate=learning_rate, experiments_task=experiments_task_mlp)
+    model = Modules.LeNet()
+    print("model_lenet is initialzed. %dth Train setting is %d and %f" % (index_setting + 1, TRAIN_EPOCHS, learning_rate))
+    train_until_finish(TRAIN_EPOCHS, model=model, learning_rate=learning_rate, experiments_task=experiments_task_lenet)
+
+
+plot_util.plot_accuracy_curves([experiments_task_mlp, experiments_task_lenet], IS_RUN_ON_SERVER, IS_PYTORCH_VERSION)
+plot_util.plot_summary_table([experiments_task_mlp, experiments_task_lenet], IS_RUN_ON_SERVER, IS_PYTORCH_VERSION)
+plot_util.plot_loss_curves([experiments_task_mlp, experiments_task_lenet], LOG_ITERATIONS, IS_RUN_ON_SERVER, IS_PYTORCH_VERSION)
 

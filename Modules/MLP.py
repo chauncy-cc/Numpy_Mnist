@@ -9,7 +9,7 @@ class MLP:
         self.linear2 = nn.Linear(128, 10)
         self.ce = nn.CrossEntropyLoss()
         self.softmax = nn.Softmax()
-        print('MLP constructed!')
+        print('Model_MLP constructed!')
 
     # Train process TO DO: train的时候将loss返回出来
     def train(self, x, y_, learning_rate):
