@@ -21,7 +21,6 @@ writer_lenet = SummaryWriter('./Result/pytorch/lenet')
 parser = argparse.ArgumentParser()
 parser.add_argument('--outf', default='./model_save/pytorch/', help='folder to output images and model checkpoints')   # 模型保存路径
 parser.add_argument('--net', default='./model_save/pytorch/net.pth', help="path to netG (to continue training)")       # 模型加载路径
-parser.add_argument('--server', default='True', help='is run on server or not')                                        # 是否跑在服务器
 
 opt = parser.parse_args()
 
@@ -32,8 +31,7 @@ TRAIN_EPOCHS = 25
 PIC_ITERATIONS = 10
 LOG_ITERATIONS = 100
 IS_PYTORCH_VERSION = True
-IS_RUN_ON_SERVER = opt.server
-TRAIN_EPOCHS = 10 if IS_RUN_ON_SERVER else 1
+TRAIN_EPOCHS = 1
 
 
 train_set = datasets.MNIST('./data',
@@ -162,12 +160,10 @@ def test(epoch, test_accuracy, model):
 criterion = nn.CrossEntropyLoss()
 
 # TODO： 各种优化器、是否分布式、学习率才是超参，epoch可以不在setting中设置
-settings = [(0, 0, 0.0001), (0, 0, 0.005), (0, 0, 0.001),
-            (0, 1, 0.0001), (0, 1, 0.005), (0, 1, 0.001),
-            (1, 0, 0.0001), (1, 0, 0.005), (1, 0, 0.001),]
+settings = [(0.0001), (0.005), (0.001)]
 experiments_task_mlp = []
 experiments_task_lenet = []
-for index_setting, (_, _, learning_rate) in enumerate(settings):
+for index_setting, (learning_rate) in enumerate(settings):
     model = MLP().to(device)
     optimizer = optim.SGD(model.parameters(), lr=learning_rate, momentum=MOMENTUM)
     print("model_mlp is initialized. %dth Train setting is %d and %f" % (index_setting + 1, TRAIN_EPOCHS, learning_rate))

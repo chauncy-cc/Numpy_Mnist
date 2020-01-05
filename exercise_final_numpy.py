@@ -101,8 +101,9 @@ def one_hot(labels, n_class):
 
 
 settings = [(0, 0, 0.0001), (0, 0, 0.005), (0, 0, 0.001),
-            (0, 1, 0.0001), (0, 1, 0.005), (0, 1, 0.001),
-            (1, 0, 0.0001), (1, 0, 0.005), (1, 0, 0.001),]
+#            (0, 1, 0.0001), (0, 1, 0.005), (0, 1, 0.001),
+#            (1, 0, 0.0001), (1, 0, 0.005), (1, 0, 0.001),
+            ]
 experiments_task_mlp = []
 experiments_task_lenet = []
 for index_setting, (_, _, learning_rate) in enumerate(settings):
