@@ -1,5 +1,6 @@
 import nn
 import copy
+import time
 import numba
 import Modules
 import argparse
@@ -17,9 +18,8 @@ writer_mlp = SummaryWriter('./Result/numpy/mlp')
 writer_lenet = SummaryWriter('./Result/numpy/lenet')
 
 parser = argparse.ArgumentParser()
-parser.add_argument('--outf', default='./model_save/pytorch/', help='folder to output images and model checkpoints')   # 模型保存路径
-parser.add_argument('--net', default='./model_save/pytorch/net.pth', help="path to netG (to continue training)")       # 模型加载路径
-parser.add_argument('--server', default='true', help='is run on server or not')                                        # 是否跑在服务器
+parser.add_argument('--outf', default='./model_save/numpy/', help='folder to output images and model checkpoints')   # 模型保存路径
+parser.add_argument('--net', default='./model_save/numpy/net.pth', help="path to netG (to continue training)")       # 模型加载路径
 opt = parser.parse_args()
 
 # Global variables
@@ -27,9 +27,8 @@ N_CLASS = 10
 BATCH_SIZE = 64
 PIC_ITERATIONS = 10
 LOG_ITERATIONS = 100
-IS_RUN_ON_SERVER = True
 IS_PYTORCH_VERSION = False
-TRAIN_EPOCHS = 10 if IS_RUN_ON_SERVER else 1
+TRAIN_EPOCHS = 10
 
 train_set = datasets.MNIST('./data',
                            train=True,
@@ -52,7 +51,8 @@ test_loader = DataLoader(dataset=test_set,
 
 @numba.jit
 def train_until_finish(num_epochs, model, learning_rate, experiments_task):
-    train_accuracy, test_accuracy, train_loss = [], [], []
+    train_accuracy, test_accuracy, train_loss, train_time = [], [], [], []
+    time_s = time.time()
     for epoch in range(num_epochs):
         correct = 0
         total = 0
@@ -77,7 +77,8 @@ def train_until_finish(num_epochs, model, learning_rate, experiments_task):
                 pic_loss = 0.0
         train_accuracy.append(100 * correct / total)
         test(epoch, test_accuracy, model)
-    experiments_task.append(((num_epochs, learning_rate), train_accuracy, test_accuracy, train_loss))
+    train_time.append(time.time() - time_s)
+    experiments_task.append(((num_epochs, learning_rate), train_accuracy, test_accuracy, train_loss, train_time))
 
 
 def test(epoch, test_accuracy, model):
@@ -99,23 +100,20 @@ def test(epoch, test_accuracy, model):
 def one_hot(labels, n_class):
     return np.array([[1 if i == l else 0 for i in range(n_class)] for l in labels])
 
-
-settings = [(0, 0, 0.0001), (0, 0, 0.005), (0, 0, 0.001),
-#            (0, 1, 0.0001), (0, 1, 0.005), (0, 1, 0.001),
-#            (1, 0, 0.0001), (1, 0, 0.005), (1, 0, 0.001),
-            ]
+# numpy无法实现分布式，所以超参数只有学习率
+settings = [(0.0001), (0.005), (0.001)]
 experiments_task_mlp = []
 experiments_task_lenet = []
-for index_setting, (_, _, learning_rate) in enumerate(settings):
+for index_setting, (learning_rate) in enumerate(settings):
     model = Modules.MLP()
-    print("model_mlp is initialized. %dth Train setting is %d and %f" % (index_setting + 1, TRAIN_EPOCHS, learning_rate))
+    print("model_mlp is initialized. %dth Train setting is %f" % (index_setting + 1, learning_rate))
     train_until_finish(TRAIN_EPOCHS, model=model, learning_rate=learning_rate, experiments_task=experiments_task_mlp)
     model = Modules.LeNet()
-    print("model_lenet is initialzed. %dth Train setting is %d and %f" % (index_setting + 1, TRAIN_EPOCHS, learning_rate))
+    print("model_lenet is initialzed. %dth Train setting is %f" % (index_setting + 1, learning_rate))
     train_until_finish(TRAIN_EPOCHS, model=model, learning_rate=learning_rate, experiments_task=experiments_task_lenet)
 
-
-plot_util.plot_accuracy_curves([experiments_task_mlp, experiments_task_lenet], IS_RUN_ON_SERVER, IS_PYTORCH_VERSION)
-plot_util.plot_summary_table([experiments_task_mlp, experiments_task_lenet], IS_RUN_ON_SERVER, IS_PYTORCH_VERSION)
-plot_util.plot_loss_curves([experiments_task_mlp, experiments_task_lenet], LOG_ITERATIONS, IS_RUN_ON_SERVER, IS_PYTORCH_VERSION)
+plot_util.plot_accuracy_curves([experiments_task_mlp, experiments_task_lenet], IS_PYTORCH_VERSION)
+plot_util.plot_accuracy_summary_table([experiments_task_mlp, experiments_task_lenet], IS_PYTORCH_VERSION)
+plot_util.plot_train_time_summary_table([experiments_task_mlp, experiments_task_lenet], IS_PYTORCH_VERSION)
+plot_util.plot_loss_curves([experiments_task_mlp, experiments_task_lenet], LOG_ITERATIONS, IS_PYTORCH_VERSION)
 

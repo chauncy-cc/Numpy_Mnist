@@ -1,3 +1,5 @@
+import os
+import time
 import torch
 import argparse
 import warnings
@@ -5,14 +7,15 @@ import plot_util
 import torch.nn as nn
 import torch.optim as optim
 import torch.nn.functional as F
-from tensorboardX import SummaryWriter
 from torch.utils.data import DataLoader
 from torchvision import datasets, transforms
+from torch.utils.tensorboard import SummaryWriter
 
 warnings.filterwarnings('ignore')
+os.environ['CUDA_VISIBLE_DEVICES'] = '0,1,2,3'
 
 # 定义是否使用GPU
-device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 print("device: " + device.type)
 # 定义Summary_Writer，数据放在指定文件夹
 writer_mlp = SummaryWriter('./Result/pytorch/mlp')
@@ -27,11 +30,10 @@ opt = parser.parse_args()
 # Hyper parameters
 MOMENTUM = 0.9
 BATCH_SIZE = 64
-TRAIN_EPOCHS = 25
 PIC_ITERATIONS = 10
 LOG_ITERATIONS = 100
 IS_PYTORCH_VERSION = True
-TRAIN_EPOCHS = 1
+TRAIN_EPOCHS = 10
 
 
 train_set = datasets.MNIST('./data',
@@ -106,7 +108,8 @@ class MLP(nn.Module):
 
 
 def train_until_finish(num_epochs, model, optimizer, learning_rate, experiments_task):
-    train_accuracy, test_accuracy, train_loss = [], [], []
+    train_accuracy, test_accuracy, train_loss, train_time = [], [], [], []
+    time_s = time.time()
     for epoch in range(num_epochs):
         correct = 0
         total = 0
@@ -124,7 +127,7 @@ def train_until_finish(num_epochs, model, optimizer, learning_rate, experiments_
             pic_loss += loss.item()
             predicted = torch.argmax(F.softmax(outputs), 1)           # 算出模型输出
             total += labels.size(0)
-            correct += (predicted.numpy() == labels.numpy()).sum()
+            correct += (predicted.cpu().numpy() == labels.cpu().numpy()).sum()
 
             if batch_idx != 0 and batch_idx % LOG_ITERATIONS == 0:
                 print('epoch: %d, batch_idx: %d average_batch_loss: %f'
@@ -137,8 +140,8 @@ def train_until_finish(num_epochs, model, optimizer, learning_rate, experiments_
                 pic_loss = 0.0
         train_accuracy.append(100 * correct / total)
         test(epoch, test_accuracy, model)
-        # torch.save(model.state_dict(), '%s/net_%03d.pth' % (opt.outf, epoch + 1))
-    experiments_task.append(((num_epochs, learning_rate), train_accuracy, test_accuracy, train_loss))
+    train_time.append(time.time() - time_s)
+    experiments_task.append(((num_epochs, learning_rate), train_accuracy, test_accuracy, train_loss, train_time))
 
 
 def test(epoch, test_accuracy, model):
@@ -151,7 +154,7 @@ def test(epoch, test_accuracy, model):
             # 取得分最高的那个类
             _, predicted = torch.max(outputs.data, 1)
             total += labels.size(0)
-            correct += (predicted.numpy() == labels.numpy()).sum()
+            correct += (predicted.cpu().numpy() == labels.cpu().numpy()).sum()
         print('%dth epoch\'s classification accuracy is: %.6f%%' % (epoch + 1, 100 * correct / total))
         test_accuracy.append(100 * correct / total)
         writer_lenet.add_scalar('Test/Accu', (100 * correct / total), epoch * len(train_loader))
@@ -159,22 +162,33 @@ def test(epoch, test_accuracy, model):
 # 定义损失函数
 criterion = nn.CrossEntropyLoss()
 
-# TODO： 各种优化器、是否分布式、学习率才是超参，epoch可以不在setting中设置
-settings = [(0.0001), (0.005), (0.001)]
+# TODO： 是否是分布式，学习率是超参
+settings = [(1, 0.005), (0, 0.0001), (0, 0.005), (0, 0.001)]
 experiments_task_mlp = []
 experiments_task_lenet = []
-for index_setting, (learning_rate) in enumerate(settings):
-    model = MLP().to(device)
+for index_setting, (is_distributed, learning_rate) in enumerate(settings):
+    model = MLP()
+    if is_distributed == 1:
+        model = nn.DataParallel(model, device_ids=[0,1,2,3])
+        # optimizer = nn.DataParallel(optimizer, device_ids=[0,1,2,3])
+    model = model.to(device)
     optimizer = optim.SGD(model.parameters(), lr=learning_rate, momentum=MOMENTUM)
-    print("model_mlp is initialized. %dth Train setting is %d and %f" % (index_setting + 1, TRAIN_EPOCHS, learning_rate))
+    print("model_mlp is initialized. %dth Train setting is %d and %f" % (index_setting + 1, is_distributed, learning_rate))
     train_until_finish(TRAIN_EPOCHS, model=model, optimizer=optimizer, learning_rate=learning_rate, experiments_task=experiments_task_mlp)
-    model = LeNet().to(device)
+
+    model = LeNet()
+    if is_distributed == 1:
+        model = nn.DataParallel(model, device_ids=[0,1,2,3])
+    model = model.to(device)
     optimizer = optim.SGD(model.parameters(), lr=learning_rate, momentum=MOMENTUM)
-    print("model_lenet is initialzed. %dth Train setting is %d and %f" % (index_setting + 1, TRAIN_EPOCHS, learning_rate))
+    print("model_lenet is initialzed. %dth Train setting is %d and %f" % (index_setting + 1, is_distributed, learning_rate))
     train_until_finish(TRAIN_EPOCHS, model=model, optimizer=optimizer, learning_rate=learning_rate, experiments_task=experiments_task_lenet)
 
-plot_util.plot_accuracy_curves([experiments_task_mlp, experiments_task_lenet], IS_RUN_ON_SERVER, IS_PYTORCH_VERSION)
-plot_util.plot_summary_table([experiments_task_mlp, experiments_task_lenet], IS_RUN_ON_SERVER, IS_PYTORCH_VERSION)
-plot_util.plot_loss_curves([experiments_task_mlp, experiments_task_lenet], LOG_ITERATIONS, IS_RUN_ON_SERVER, IS_PYTORCH_VERSION)
+plot_util.plot_accuracy_curves([experiments_task_mlp, experiments_task_lenet], IS_PYTORCH_VERSION)
+plot_util.plot_accuracy_summary_table([experiments_task_mlp, experiments_task_lenet], IS_PYTORCH_VERSION)
+plot_util.plot_train_time_summary_table([experiments_task_mlp, experiments_task_lenet], IS_PYTORCH_VERSION)
+plot_util.plot_loss_curves([experiments_task_mlp, experiments_task_lenet], LOG_ITERATIONS, IS_PYTORCH_VERSION)
+
+
 
 # 来自：https://blog.csdn.net/sunqiande88/article/details/80089941

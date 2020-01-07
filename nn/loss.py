@@ -15,3 +15,4 @@ class CrossEntropyLoss:
         dx = x.copy()
         dx[range(len(x)), np.argmax(y_, 1)] -= 1
         return dx
+

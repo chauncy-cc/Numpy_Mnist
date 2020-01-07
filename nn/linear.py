@@ -22,6 +22,5 @@ class Linear:
         self.w -= lr * dw
         return dL_dx
 
-
 # https://blog.csdn.net/zhongshaoyy/article/details/52957794
 # https://blog.csdn.net/zhongshaoyy/article/details/52957760

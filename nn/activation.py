@@ -13,8 +13,8 @@ class ReLU:
         y = x * (x > 0)
         return y
 
-    def backward(self, dL_dy, y):
-        dL_dx = dL_dy * (y > 0)
+    def backward(self, dL_dy, x):
+        dL_dx = dL_dy * (x > 0)
         return dL_dx
 
 
@@ -27,8 +27,9 @@ class Sigmoid:
         y = 1 / (1 + np.exp(-x))
         return y
 
-    def backward(self, dL_dy, y):
-        pass
+    def backward(self, dL_dy, x):
+        dL_dx = dL_dy * np.exp(x) / np.power((1 + np.exp(-x)), 2)        # 好像没考虑dL_dy是一个list
+        return dL_dx
 
 
 # 定义SoftMax激活函数
@@ -41,8 +42,10 @@ class Softmax:
         y /= np.sum(y, axis=1, keepdims=True)             # 缩放不影响结果，仅为避免溢出
         return y
 
-    def backward(self):
+    def backward(self, dL_dy, x):
         pass
+
+# 参考：https://blog.csdn.net/qian99/article/details/78046329
 
 
 # 定义tanh激活函数
@@ -55,5 +58,5 @@ class Tanh:
         y2 = np.exp(x) + np.exp(-x)
         return y1 / y2
 
-    def backward(self, dL_dy, y):
+    def backward(self, dL_dy, x):
         pass

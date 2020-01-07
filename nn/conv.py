@@ -121,3 +121,5 @@ class Conv2d:
         self.b = b
 
         return dx
+
+# http: // jermmy.xyz / 2017 / 12 / 16 / 2017 - 12 - 16 - cnn - back - propagation /

@@ -23,6 +23,7 @@ class MLP:
         loss = self.ce.forward(f4, y_)
         # backward
         b1 = self.ce.backward(f4, y_)
+        # b2 = self.
         b2 = self.linear2.backward(b1, f2, learning_rate)
         b3 = self.relu.backward(b2, f1)
         b5 = self.linear1.backward(b3, flat, learning_rate)
